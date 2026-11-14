@@ -176,9 +176,9 @@ const features = [
 
 const whatsNewItems = [
   {
-    version: 'Next.js 16.4.6 + React 19.3.1',
+    version: 'Next.js 16.4.6 + Vercel Observability',
     detail:
-      'Upgraded to Next.js 16 proxy.ts convention, ESLint 9 flat config CLI (eslint .), and zero-warning Turbopack builds.',
+      'Next.js 16 proxy.ts, ESLint 9 CLI (eslint .), and pre-wired @vercel/speed-insights & @vercel/analytics in layout.tsx.',
   },
   {
     version: 'Supabase SSR v0.12 + JS v2.119',
@@ -186,14 +186,14 @@ const whatsNewItems = [
       'Pre-wired browser/server clients, session refresh proxy, RLS + Realtime SQL migrations, and live /supabase-test diagnostics.',
   },
   {
-    version: '5 AI Agent Skills + Router',
+    version: '5 AI Agent Skills + CLAUDE.md',
     detail:
       'Built-in skills in .agent/skills/ for Supabase, Postgres Best Practices, Realtime, Security Audit, and Engineering Standards.',
   },
   {
-    version: 'Ticket-First dev Branch & CI/CD',
+    version: 'Always-On /ticket Rule & dev Branch',
     detail:
-      'Local git-ignored tickets (tickets/TEMPLATE.md), automated dev branch push workflow, tsx test runner, and GitHub Actions CI.',
+      'Automatic ticket creation (.agent/rules/ticket-workflow.md + /ticket), automated dev branch push workflow, and GitHub Actions CI.',
   },
 ]
 

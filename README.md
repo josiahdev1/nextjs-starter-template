@@ -8,9 +8,10 @@ A production-ready **Next.js 16** starter with **Tailwind CSS v4**, **shadcn/ui 
 - Tailwind CSS v4 with OKLCH design tokens and `tw-animate-css`
 - shadcn/ui (base-nova, Base UI): forms, dialogs, sidebar, charts (recharts), carousel (Embla), command palette (cmdk), code highlighting (Shiki), chat widgets, and more
 - Poppins font via `next/font/google`
+- Vercel Speed Insights (`@vercel/speed-insights`) & Web Analytics (`@vercel/analytics`) pre-wired in `src/app/layout.tsx` (inactive locally, active automatically once deployed with Speed Insights and Web Analytics enabled in the Vercel dashboard)
 - ESLint 9 (flat config) + Prettier (Tailwind class sorting)
 - GitHub Actions: CI, Dependabot auto-merge, weekly shadcn sync
-- `AGENTS.md` + `tickets/` workflow for AI coding agents
+- `AGENTS.md`, `CLAUDE.md`, `.agent/rules/ticket-workflow.md` (`always_on`), and `/ticket` workflow for automatic ticket-first AI development
 - Optional Supabase (auth, database, realtime, storage)
 
 ## Requirements
@@ -60,9 +61,13 @@ supabase/
   migrations/        Numbered SQL migrations (RLS + Realtime enabled)
   README.md          Autonomous database migration & push rules
 tickets/             Ticket template + git-ignored local tickets (AI workflow)
-.agent/skills/       Pre-installed AI agent skills
+.agent/
+  rules/             Always-on rules (ticket-workflow.md)
+  skills/            Pre-installed AI agent skills
+  workflows/         Slash workflows (/ticket)
 .github/             CI, Dependabot, shadcn sync workflows
-AGENTS.md            Rules for AI coding agents
+AGENTS.md            Master rules for AI coding agents
+CLAUDE.md            Claude Code bridge to @AGENTS.md
 ```
 
 ## Using shadcn/ui
@@ -129,19 +134,13 @@ Five skills live in `.agent/skills/` (and `.claude/skills/`) and are routed thro
 | `security-audit`                   | Defensive security review workflow and 14 threat handbooks                                                                 |
 | `engineering-skills`               | Architecture, backend, DevOps, performance, and testing practices                                                          |
 
-## Working with AI agents (ticket workflow)
+## Working with AI agents (automatic ticket workflow)
 
-This repo is set up for AI coding agents. They read `AGENTS.md` and follow a **ticket-first** workflow:
+This repo is pre-configured for AI coding agents (`AGENTS.md`, `CLAUDE.md`, `.agent/rules/ticket-workflow.md`, and `.agent/workflows/ticket.md`). Ticket creation is **automatic** (`trigger: always_on`)—you can type feature or fix requests directly without pasting prompt boilerplate:
 
-1. Every change has a ticket in `tickets/ticket-XX-<slug>.md` (copy `tickets/TEMPLATE.md`). Local tickets stay in `tickets/` and are ignored by Git via `tickets/.gitignore`.
-2. The agent works on the `dev` branch, sets the ticket `IN PROGRESS`, implements, records **real** lint/type/build results, sets `COMPLETED`, and commits and pushes to `origin/dev` (`git push -u origin dev`) to be merged into `main` via Pull Request on GitHub.
-
-Starter prompt to give your agent:
-
-```text
-Read AGENTS.md and tickets/TEMPLATE.md, then create the next ticket for: <what you want>.
-Follow the ticket-first workflow and record real verification output.
-```
+1. On any code, config, or doc change request, the agent automatically reads `AGENTS.md` and `tickets/TEMPLATE.md`, creates the next sequential `tickets/ticket-XX-<slug>.md` with `Status: IN PROGRESS`, and works on the `dev` branch. (Local tickets stay in `tickets/` and are ignored by Git via `tickets/.gitignore`.)
+2. After implementing, the agent runs `npm run format`, `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`, records real outputs in the ticket, sets `Status: COMPLETED`, and pushes to `origin/dev` (`git push -u origin dev`).
+3. You can also trigger the workflow explicitly with `/ticket <task>`, or say `"no ticket"` / `"read-only"` when asking a read-only question.
 
 ## CI/CD
 
