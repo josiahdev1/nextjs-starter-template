@@ -1,5 +1,16 @@
 import Image from 'next/image'
-import { Type } from 'lucide-react'
+import Link from 'next/link'
+import {
+  ArrowUpRight,
+  BookOpen,
+  Bot,
+  CheckCircle2,
+  FileCode2,
+  ShieldCheck,
+  Sparkles,
+  Terminal,
+  Type,
+} from 'lucide-react'
 
 function NextjsIcon({ className }: { className?: string }) {
   return (
@@ -92,31 +103,69 @@ function ShadcnIcon({ className }: { className?: string }) {
   )
 }
 
+function SupabaseIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 109 113" fill="none">
+      <path
+        d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z"
+        fill="#3ECF8E"
+      />
+      <path
+        d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z"
+        fill="#3ECF8E"
+      />
+    </svg>
+  )
+}
+
+function GitHubIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z" />
+    </svg>
+  )
+}
+
 const features = [
   {
-    title: 'Tailwind CSS v4',
-    subtitle: 'Modern styling & tokens',
-    icon: <TailwindIcon className="size-4.5 text-[#06b6d4]" />,
-  },
-  {
-    title: 'TypeScript',
-    subtitle: 'Strict type safety',
-    icon: <TypeScriptIcon className="size-4.5 rounded-xs" />,
-  },
-  {
-    title: 'Shadcn UI',
-    subtitle: 'Base UI components',
-    icon: <ShadcnIcon className="size-4 text-black dark:text-white" />,
-  },
-  {
-    title: 'Next.js 16',
+    title: 'Next.js 16.4.6',
     subtitle: 'App Router & Turbopack',
     icon: <NextjsIcon className="size-4 text-black dark:text-white" />,
   },
   {
-    title: 'React 19',
-    subtitle: 'React Compiler',
-    icon: <ReactIcon className="size-4.5 text-[#58c4dc]" />,
+    title: 'React 19.3.1',
+    subtitle: 'React Compiler & RSC',
+    icon: <ReactIcon className="size-4.5 text-cyan-500" />,
+  },
+  {
+    title: 'Tailwind CSS v4',
+    subtitle: 'OKLCH & canonical tokens',
+    icon: <TailwindIcon className="size-4.5 text-cyan-500" />,
+  },
+  {
+    title: 'TypeScript 5',
+    subtitle: 'Strict type safety',
+    icon: <TypeScriptIcon className="size-4.5 rounded-xs" />,
+  },
+  {
+    title: 'Shadcn UI (50+)',
+    subtitle: 'Base UI v4.23 components',
+    icon: <ShadcnIcon className="size-4 text-black dark:text-white" />,
+  },
+  {
+    title: 'Supabase Ready',
+    subtitle: 'SSR, RLS & Realtime',
+    icon: <SupabaseIcon className="size-4" />,
+  },
+  {
+    title: '5 Agent Skills',
+    subtitle: 'Pre-installed in .agent/',
+    icon: <Bot className="size-4 text-indigo-500" />,
+  },
+  {
+    title: 'CI/CD & Quality',
+    subtitle: 'ESLint 9, Prettier & Tests',
+    icon: <ShieldCheck className="size-4 text-emerald-500" />,
   },
   {
     title: 'Poppins Font',
@@ -125,42 +174,117 @@ const features = [
   },
 ]
 
+const whatsNewItems = [
+  {
+    version: 'Next.js 16.4.6 + React 19.3.1',
+    detail:
+      'Upgraded to Next.js 16 proxy.ts convention, ESLint 9 flat config CLI (eslint .), and zero-warning Turbopack builds.',
+  },
+  {
+    version: 'Supabase SSR v0.12 + JS v2.119',
+    detail:
+      'Pre-wired browser/server clients, session refresh proxy, RLS + Realtime SQL migrations, and live /supabase-test diagnostics.',
+  },
+  {
+    version: '5 AI Agent Skills + Router',
+    detail:
+      'Built-in skills in .agent/skills/ for Supabase, Postgres Best Practices, Realtime, Security Audit, and Engineering Standards.',
+  },
+  {
+    version: 'Ticket-First dev Branch & CI/CD',
+    detail:
+      'Local git-ignored tickets (tickets/TEMPLATE.md), automated dev branch push workflow, tsx test runner, and GitHub Actions CI.',
+  },
+]
+
+const readmeHighlights = [
+  {
+    label: 'Quick Start & Scripts',
+    description:
+      'Run dev, build, lint, typecheck, format, and automated tsx tests with zero initial config.',
+  },
+  {
+    label: 'Project Structure & Shadcn CLI',
+    description:
+      'Full directory map (src/, supabase/, tickets/, .agent/skills/) and safe shadcn component commands.',
+  },
+  {
+    label: 'AI Agent Prompt & Troubleshooting',
+    description:
+      'Copy-paste starter prompts for AI coding agents plus solutions for common Next.js 16 and CI issues.',
+  },
+]
+
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between gap-10 bg-white px-8 py-16 sm:items-start sm:px-16 sm:py-24 dark:bg-black">
-        <Image
-          className="h-5 w-25 dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
+      <main className="flex w-full max-w-4xl flex-1 flex-col items-center justify-between gap-10 bg-white px-6 py-12 sm:items-start sm:px-14 sm:py-16 dark:bg-black">
+        {/* Top bar with Next.js logo and GitHub repo badge */}
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Image
+              className="h-5 w-25 dark:invert"
+              src="/next.svg"
+              alt="Next.js logo"
+              width={100}
+              height={20}
+              priority
+            />
+            <span className="rounded-full border border-black/10 bg-black/4 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-zinc-700 dark:border-white/15 dark:bg-white/8 dark:text-zinc-200">
+              v2.0 Starter Pack • Next.js 16.4.6
+            </span>
+          </div>
 
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <div className="flex flex-col gap-2">
+          <a
+            href="https://github.com/josiahdev1/nextjs-starter-template"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/2 px-3.5 py-1.5 text-xs font-medium whitespace-nowrap text-zinc-700 transition-colors hover:border-black/20 hover:bg-black/6 dark:border-white/15 dark:bg-white/6 dark:text-zinc-200 dark:hover:border-white/25 dark:hover:bg-white/10"
+          >
+            <GitHubIcon className="size-3.5" />
+            <span>josiahdev1/nextjs-starter-template</span>
+            <ArrowUpRight className="size-3.5 text-zinc-400" />
+          </a>
+        </div>
+
+        {/* Hero & Content */}
+        <div className="flex w-full flex-col items-center gap-8 text-center sm:items-start sm:text-left">
+          <div className="flex flex-col gap-3">
             <h1 className="text-3xl leading-10 font-semibold tracking-tight text-black sm:text-4xl dark:text-zinc-50">
               Starter Template
             </h1>
-            <p className="max-w-md text-base leading-7 text-zinc-600 dark:text-zinc-400">
+            <p className="max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
               Get started by editing{' '}
-              <code className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/8">
+              <code className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-sm dark:bg-white/10 dark:text-zinc-200">
                 src/app/page.tsx
               </code>{' '}
-              file.
+              or read{' '}
+              <code className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-sm dark:bg-white/10 dark:text-zinc-200">
+                README.md
+              </code>{' '}
+              and{' '}
+              <code className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-sm dark:bg-white/10 dark:text-zinc-200">
+                AGENTS.md
+              </code>{' '}
+              to build with AI agents and optional Supabase.
             </p>
           </div>
 
-          <div className="flex w-full max-w-lg flex-col gap-3">
-            <p className="text-xs font-semibold tracking-wider text-zinc-400 uppercase dark:text-zinc-500">
-              What&apos;s Included
-            </p>
+          {/* 1. What's Included Grid */}
+          <div className="flex w-full flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold tracking-wider text-zinc-400 uppercase dark:text-zinc-500">
+                What&apos;s Included
+              </p>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                9 core modules pre-configured
+              </span>
+            </div>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 md:grid-cols-3">
               {features.map((item) => (
                 <div
                   key={item.title}
-                  className="flex items-center gap-3 rounded-xl border border-black/8 bg-black/2 p-2.5 text-left transition-colors hover:border-black/15 hover:bg-black/4 dark:border-white/12 dark:bg-white/4 dark:hover:border-white/20 dark:hover:bg-white/6"
+                  className="flex items-center gap-3 rounded-xl border border-black/8 bg-black/2 p-2.5 text-left transition-colors hover:border-black/15 hover:bg-black/4 dark:border-white/12 dark:bg-white/4 dark:hover:border-white/20 dark:hover:bg-white/8"
                 >
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-black/6 bg-white shadow-2xs dark:border-white/10 dark:bg-zinc-900">
                     {item.icon}
@@ -169,7 +293,7 @@ export default function Home() {
                     <span className="text-xs font-semibold text-black dark:text-zinc-100">
                       {item.title}
                     </span>
-                    <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
                       {item.subtitle}
                     </span>
                   </div>
@@ -177,11 +301,131 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* 2. Separate Section: What's New in This Starter Pack (Versions & Upgrades) */}
+          <div className="flex w-full flex-col gap-3 rounded-2xl border border-black/8 bg-black/2 p-5 text-left dark:border-white/12 dark:bg-white/4">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/6 pb-3 dark:border-white/10">
+              <div className="flex items-center gap-2">
+                <Sparkles className="size-4 text-amber-500" />
+                <h2 className="text-sm font-semibold text-black dark:text-zinc-100">
+                  What&apos;s New in This Starter Pack
+                </h2>
+              </div>
+              <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-emerald-700 dark:text-emerald-400">
+                Latest Release • v2.0
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
+              {whatsNewItems.map((item) => (
+                <div
+                  key={item.version}
+                  className="flex flex-col gap-1 rounded-xl border border-black/6 bg-white p-3.5 dark:border-white/8 dark:bg-zinc-950/70"
+                >
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                    <span className="text-xs font-semibold text-black dark:text-zinc-100">
+                      {item.version}
+                    </span>
+                  </div>
+                  <p className="pl-5.5 text-xs leading-5 text-zinc-600 dark:text-zinc-400">
+                    {item.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Separate Section: Read README.md Card & Supabase Quick Start Card */}
+          <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+            {/* Dedicated Card: Read README.md */}
+            <div className="flex flex-col justify-between gap-4 rounded-2xl border border-black/8 bg-black/2 p-5 text-left dark:border-white/12 dark:bg-white/4">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="size-4 text-indigo-400" />
+                    <h2 className="text-sm font-semibold text-black dark:text-zinc-100">
+                      Read README.md Guide
+                    </h2>
+                  </div>
+                  <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-indigo-600 dark:text-indigo-400">
+                    Documentation
+                  </span>
+                </div>
+
+                <ul className="flex flex-col gap-2.5 text-xs leading-5 text-zinc-600 dark:text-zinc-400">
+                  {readmeHighlights.map((item) => (
+                    <li key={item.label} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-indigo-400" />
+                      <span>
+                        <strong className="font-semibold text-black dark:text-zinc-200">
+                          {item.label}:
+                        </strong>{' '}
+                        {item.description}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <a
+                href="https://github.com/josiahdev1/nextjs-starter-template#readme"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap text-black transition-opacity hover:opacity-75 dark:text-white"
+              >
+                <FileCode2 className="size-3.5" />
+                <span>Open README.md on GitHub</span>
+                <ArrowUpRight className="size-3.5" />
+              </a>
+            </div>
+
+            {/* Dedicated Card: Supabase & Realtime Quick Start */}
+            <div className="flex flex-col justify-between gap-4 rounded-2xl border border-black/8 bg-black/2 p-5 text-left dark:border-white/12 dark:bg-white/4">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="size-4 text-emerald-400" />
+                    <h2 className="text-sm font-semibold text-black dark:text-zinc-100">
+                      Supabase &amp; Realtime Setup
+                    </h2>
+                  </div>
+                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-cyan-600 dark:text-cyan-400">
+                    Optional Backend
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-2 text-xs leading-5 text-zinc-600 dark:text-zinc-400">
+                  <p>
+                    Runs cleanly without credentials. To connect your Supabase
+                    project:
+                  </p>
+                  <div className="rounded-xl border border-black/8 bg-white p-3 font-mono text-xs text-zinc-800 dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-200">
+                    <div>cp .env.example .env.local</div>
+                    <div className="text-zinc-400">
+                      # Add URL &amp; publishable key, then verify:
+                    </div>
+                    <div>npm run dev &amp;&amp; open /supabase-test</div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/supabase-test"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap text-emerald-600 transition-opacity hover:opacity-75 dark:text-emerald-400"
+              >
+                <SupabaseIcon className="size-3.5" />
+                <span>Open /supabase-test Diagnostics &amp; Realtime</span>
+                <ArrowUpRight className="size-3.5" />
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+        {/* Bottom CTA Actions */}
+        <div className="flex w-full flex-col flex-wrap gap-3 text-sm font-medium sm:flex-row sm:items-center">
           <a
-            className="bg-foreground text-background flex h-12 w-full items-center justify-center gap-2 rounded-full px-6 whitespace-nowrap transition-colors hover:bg-[#383838] sm:w-auto dark:hover:bg-[#ccc]"
+            className="bg-foreground text-background flex h-11 w-full items-center justify-center gap-2 rounded-full px-5 whitespace-nowrap transition-colors hover:bg-zinc-800 sm:w-auto dark:hover:bg-zinc-200"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
@@ -195,8 +439,37 @@ export default function Home() {
             />
             Deploy Now
           </a>
+
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/8 px-6 whitespace-nowrap transition-colors hover:border-transparent hover:bg-black/4 sm:w-auto dark:border-white/15 dark:hover:bg-[#1a1a1a]"
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-solid border-black/10 px-5 whitespace-nowrap transition-colors hover:bg-black/4 sm:w-auto dark:border-white/15 dark:hover:bg-white/8"
+            href="https://github.com/josiahdev1/nextjs-starter-template"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GitHubIcon className="size-4" />
+            GitHub Repo
+          </a>
+
+          <a
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-solid border-black/10 px-5 whitespace-nowrap transition-colors hover:bg-black/4 sm:w-auto dark:border-white/15 dark:hover:bg-white/8"
+            href="https://github.com/josiahdev1/nextjs-starter-template#readme"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <BookOpen className="size-4" />
+            Read README.md
+          </a>
+
+          <Link
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-solid border-black/10 px-5 whitespace-nowrap transition-colors hover:bg-black/4 sm:w-auto dark:border-white/15 dark:hover:bg-white/8"
+            href="/supabase-test"
+          >
+            <SupabaseIcon className="size-4" />
+            Supabase Diagnostics
+          </Link>
+
+          <a
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-solid border-black/10 px-5 whitespace-nowrap transition-colors hover:bg-black/4 sm:w-auto dark:border-white/15 dark:hover:bg-white/8"
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
