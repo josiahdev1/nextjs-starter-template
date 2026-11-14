@@ -6,3 +6,4 @@ build
 public
 package-lock.json
 .agent/
+tickets/ticket-*.md

@@ -150,7 +150,7 @@ npm run audit
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/josiahdev1/next-supabase-enterprise-engine.git
+git clone https://github.com/<your-github-username>/next-supabase-enterprise-engine.git
 cd next-supabase-enterprise-engine
 npm install
 ```

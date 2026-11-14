@@ -134,7 +134,7 @@ Five skills live in `.agent/skills/` (and `.claude/skills/`) and are routed thro
 This repo is set up for AI coding agents. They read `AGENTS.md` and follow a **ticket-first** workflow:
 
 1. Every change has a ticket in `tickets/ticket-XX-<slug>.md` (copy `tickets/TEMPLATE.md`). Local tickets stay in `tickets/` and are ignored by Git via `tickets/.gitignore`.
-2. The agent sets it `IN PROGRESS`, implements, records **real** lint/type/build results, then sets `COMPLETED`.
+2. The agent works on the `dev` branch, sets the ticket `IN PROGRESS`, implements, records **real** lint/type/build results, sets `COMPLETED`, and commits and pushes to `origin/dev` (`git push -u origin dev`) to be merged into `main` via Pull Request on GitHub.
 
 Starter prompt to give your agent:
 
@@ -145,12 +145,11 @@ Follow the ticket-first workflow and record real verification output.
 
 ## CI/CD
 
-| Workflow                      | Purpose                                                                       |
-| ----------------------------- | ----------------------------------------------------------------------------- |
-| `ci.yml`                      | On push/PR: install, format check, lint, typecheck, tests (if present), build |
-| `dependabot-automerge.yml`    | Auto-merges non-major Dependabot PRs                                          |
-| `update-shadcn.yml`           | Weekly diff of upstream shadcn components, opens a PR                         |
-| `ticket-check.yml` (optional) | Requires a `tickets/ticket-*.md` change in feature PRs                        |
+| Workflow                   | Purpose                                                                                       |
+| -------------------------- | --------------------------------------------------------------------------------------------- |
+| `ci.yml`                   | On push/PR (`main`, `dev`): install, format check, lint, typecheck, tests (if present), build |
+| `dependabot-automerge.yml` | Auto-merges non-major Dependabot PRs                                                          |
+| `update-shadcn.yml`        | Weekly diff of upstream shadcn components, opens a PR                                         |
 
 If your build needs Supabase variables, add them as **GitHub Actions secrets** named `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Without Supabase, nothing needs to be configured.
 

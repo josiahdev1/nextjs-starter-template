@@ -19,14 +19,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/josiahdev1/next-supabase-enterprise-engine.git"
+    "url": "git+https://github.com/<your-github-username>/next-supabase-enterprise-engine.git"
   },
-  "author": "josiahdev1",
+  "author": "<your-github-username>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/josiahdev1/next-supabase-enterprise-engine/issues"
+    "url": "https://github.com/<your-github-username>/next-supabase-enterprise-engine/issues"
   },
-  "homepage": "https://github.com/josiahdev1/next-supabase-enterprise-engine#readme",
+  "homepage": "https://github.com/<your-github-username>/next-supabase-enterprise-engine#readme",
   "engines": {
     "node": ">=18.0.0"
   }

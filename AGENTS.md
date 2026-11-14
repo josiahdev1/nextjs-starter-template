@@ -63,7 +63,7 @@ Tailwind's scale is based on `1 unit = 4px` (0.25rem). Avoid arbitrary pixel bra
 
 ## Ticket-First Development Workflow (`tickets/`)
 
-1. **Mandatory Read & Naming Convention**: Before starting any task, always read `tickets/TEMPLATE.md` and inspect existing `tickets/ticket-*.md` files to check active tickets or determine the next sequential number. Every ticket lives in root `tickets/` named `tickets/ticket-XX-<kebab-case-slug>.md` and strictly follows `tickets/TEMPLATE.md` (`# [TICKET-XX] <Title>`, metadata block with `Phase / Milestone`, `Status`: `TODO` | `IN PROGRESS` | `COMPLETED`, `Date`, `Commit SHA`, `Branch: develop`, `Author / Assignee`, and sections `1. Context & Objectives` through `5. Notes & Dependencies`).
+1. **Mandatory Read & Naming Convention**: Before starting any task, always read `tickets/TEMPLATE.md` and inspect existing `tickets/ticket-*.md` files to check active tickets or determine the next sequential number. Every ticket lives in root `tickets/` named `tickets/ticket-XX-<kebab-case-slug>.md` and strictly follows `tickets/TEMPLATE.md` (`# [TICKET-XX] <Title>`, metadata block with `Phase / Milestone`, `Status`: `TODO` | `IN PROGRESS` | `COMPLETED`, `Date`, `Commit SHA`, `Branch: dev`, `Author / Assignee`, and sections `1. Context & Objectives` through `5. Notes & Dependencies`).
 2. **Ticket Before Code (Zero Unapproved Coding)**:
    - **Existing / Provided Ticket**: If the owner already created, named, or pasted a ticket, read that exact ticket, NEVER create a duplicate, set `**Status**: IN PROGRESS`, implement all changes, fill in `Commit SHA` and `4. Verification & Quality Gates` with real command outputs, and set `**Status**: COMPLETED` when done.
    - **New Request Without a Ticket**: If the owner asks for a new feature, UI change, or bug fix without an existing ticket, create the next sequential ticket from `tickets/TEMPLATE.md` FIRST (`**Status**: IN PROGRESS`), and only write code after the ticket file is written.
@@ -101,16 +101,22 @@ If a script does not exist in `package.json`, write "N/A (script not configured)
 
 ## Git & GitHub Rules
 
-- **Working branch**: `develop`. All development is committed there.
+- **Working branch**: `dev`. Always ensure the `dev` branch exists (`git checkout -B dev` or `git switch -c dev` if missing) and do all development there.
+- **Automatic Stage, Commit & Push (`dev` branch)**: After completing every change/ticket and passing all quality gates, always run:
+  ```bash
+  git add .
+  git commit -m "ticket-XX: <short summary>"
+  git push -u origin dev
+  ```
 - Never commit broken code or secrets (`.env.local`, API keys, service-role keys).
-- Commit messages: `ticket-XX: <short summary>`.
-- Before opening a PR, test the merge with main:
+- Never push feature work directly to `main`; all changes are pushed to `dev` and merged into `main` via Pull Request on GitHub.
+- Before opening or merging a PR into `main`, test the merge with `origin/main`:
   ```bash
   git fetch origin main
   git merge --no-commit --no-ff origin/main
   ```
-  Resolve conflicts on `develop`, re-run all quality gates, then commit. Never push unresolved conflict markers.
-- Open a Pull Request from `develop` to `main`. `ci.yml` must pass before merge. Activity is recorded on `josiahdev1`.
+  Resolve conflicts on `dev`, re-run all quality gates, then commit and `git push origin dev`. Never push unresolved conflict markers.
+- Open a Pull Request from `dev` to `main` on GitHub. `ci.yml` must pass before merge.
 
 ## Supabase (Optional)
 
