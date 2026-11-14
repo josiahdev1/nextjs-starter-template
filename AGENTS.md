@@ -145,3 +145,54 @@ For any ticket that changes UI or behavior, run Playwright against the live app 
 - If anything fails, fix it and re-run until everything passes. Record the command and pass summary in section 4 of the ticket.
 
 <!-- END:starter-pack-additions -->
+
+---
+
+<!-- BEGIN:agent-skills-router -->
+
+## Agent Skills Router & Conflict Rules (`.agent/skills/`)
+
+Skills live in `.agent/skills/<name>/SKILL.md` and are the **source of truth** for their topic. This section only says **which skill to read** and **how to settle conflicts**. It intentionally does not repeat skill content, so never copy skill rules into this file.
+
+### 1. Which skill to read (before starting the work)
+
+| Skill | Read it before |
+|-------|----------------|
+| `supabase` | ANY Supabase task: database, Auth, RLS, Storage, Realtime, Edge Functions, migrations, CLI, MCP, debugging |
+| `supabase-postgres-best-practices` | Writing or changing anything in Postgres: tables, types, migrations, indexes, RLS policies, functions, triggers, queries, slow-query diagnosis |
+| `supabase-realtime-data` | Building live-update features (Realtime subscriptions, live dashboards, presence). **Patterns only** (see 3.5) |
+| `security-audit` | Security questions, reviews of auth, RLS, API routes, uploads, secrets, dependencies, or any request to audit or pen-test |
+| `engineering-skills` | Architecture (RSC, Server Actions, Route Handlers), data modeling, caching, background jobs, CI/CD and deployment, performance, testing, code review |
+
+- Read the relevant `SKILL.md` and then only the reference files it points to for the task. Do not bulk-read an entire skill folder.
+- In `5. Notes & Dependencies` of the active ticket, list which skills were read.
+- Supabase changes often. The `supabase` skill requires checking the current changelog and docs before implementing. Do that instead of trusting memory.
+
+### 2. Precedence when instructions disagree (highest first)
+
+1. The owner's explicit instruction and the active ticket
+2. This `AGENTS.md` (Next.js rules, Tailwind rules, ticket workflow, shadcn rules, Git rules, quality gates)
+3. Security and data-safety rules. If two skills disagree, the **stricter** rule wins
+4. `supabase` skill for Supabase-specific behavior, `supabase-postgres-best-practices` for SQL design and performance
+5. `engineering-skills` for general engineering practice
+6. `supabase-realtime-data` (reference patterns only)
+
+If a conflict is not listed below and you cannot settle it with this order, stop and ask the owner instead of guessing.
+
+### 3. Known conflicts and their resolution
+
+1. **`SECURITY DEFINER`**: Default to `SECURITY INVOKER`. Use `SECURITY DEFINER` only for atomic or locking procedures (`SELECT ... FOR UPDATE`) or RLS helper functions that truly need it, and then ALL of these apply: pinned `search_path`; an `auth.uid()` check inside the function; keep it in a non-exposed schema when it is not called from the client; if it must be called through `supabase.rpc`, revoke `EXECUTE` from `PUBLIC` and `anon` and grant only what is needed; run the Supabase advisors after the change. When unsure, the `supabase` skill wins.
+2. **Cloudflare (WAF, Turnstile, edge rules)**: Apply only if this project actually uses Cloudflare. Otherwise use the Vercel and Next.js equivalents (nonce-based CSP, rate limiting) and do not add Cloudflare dependencies.
+3. **UI standards from `security-audit` templates (file `04`)**: The shadcn/ui and Tailwind rules in this file win for components and classes. Take only the structural ideas: skeleton fallbacks that prevent layout shift, and touch targets of at least 48px on touch-first UIs.
+4. **Packages named in `engineering-skills`** (Zod, Upstash, Inngest, Resend, Vitest, Prisma, Drizzle, and so on) are options, not requirements. Add a dependency only when a ticket needs it and record it per the dependency rule. Migrations in this project use the Supabase CLI (`supabase/migrations/`), not Prisma or Drizzle.
+5. **`supabase-realtime-data`**: Use it for patterns only (`postgres_changes` subscriptions, graceful fallback to server-rendered data, no fake loops in production). Do NOT create its example tables, do NOT copy its project URL or key, and do NOT use its `src/utils/supabase` paths. This project uses `src/lib/supabase/client.ts`, `src/lib/supabase/server.ts`, and the values in `.env.local`. Create tables only when the owner asks for a feature that needs them.
+
+### 4. Using `security-audit`
+
+- **Guidance mode is the default**: use only the relevant parts for the question. Do not run the full six-phase workflow, create output folders, or write audit files unless the owner explicitly asks for an audit, pen test, or report.
+- **Full audit mode** only on explicit request. Write its output outside the repository and never commit audit artifacts.
+- Never run target code outside the safe-execution rules in that skill. Do not install dependencies for the audit.
+- Do not run `engine-scanner.cjs` on this repository unless the owner asks, because it writes assessment files into the target.
+- Never mark a security check as passed without evidence. Record the command or finding reference in the ticket.
+
+<!-- END:agent-skills-router -->

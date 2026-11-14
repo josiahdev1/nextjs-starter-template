@@ -29,6 +29,8 @@ Never put a secret / service-role key in a `NEXT_PUBLIC_*` variable. Restart `np
 
 ## 4. Agent Skills (optional)
 
+Pre-installed workspace skills live in `.agent/skills/` (routed via `AGENTS.md`); you can also update or add Supabase skills with:
+
 ```bash
 npx skills add supabase/agent-skills
 ```

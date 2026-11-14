@@ -40,3 +40,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# master upgrade source artifacts
+skills.zip
+skills_1.zip
+security-audit.zip
+security-audit_1.zip
+engineering_skills.md
+engineering_skills_1.md
+nextjs-starter-pack-master-upgrade.md

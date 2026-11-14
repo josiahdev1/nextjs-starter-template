@@ -133,6 +133,18 @@ The easiest path is to let your AI agent do steps 2 to 6 for you (see "Working w
 
 Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in your host (e.g. Vercel → Project Settings → Environment Variables) and, if your build needs them, in GitHub → Settings → Secrets and variables → Actions.
 
+### Agent Skills
+
+Five skills live in `.agent/skills/` and are read by AI agents through the router section in `AGENTS.md`:
+
+| Skill | Purpose |
+|-------|---------|
+| `supabase` | Supabase products, auth, RLS, CLI, security checklist |
+| `supabase-postgres-best-practices` | Postgres schema, indexes, RLS performance, connections |
+| `supabase-realtime-data` | Realtime subscription patterns |
+| `security-audit` | Defensive security review workflow and 14 threat handbooks |
+| `engineering-skills` | Architecture, backend, DevOps, performance, testing practices |
+
 ## Working with AI agents (ticket workflow)
 
 This repo is set up for AI coding agents. They read `AGENTS.md` and follow a **ticket-first** workflow:

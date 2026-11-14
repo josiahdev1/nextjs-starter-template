@@ -1,0 +1,33 @@
+{
+  "name": "next-supabase-enterprise-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade, reusable enterprise template engine combining Next.js App Router, Supabase, Vercel, and Cloudflare perimeter defense.",
+  "scripts": {
+    "audit": "node scripts/audit-all.cjs",
+    "test": "node scripts/audit-all.cjs"
+  },
+  "keywords": [
+    "nextjs",
+    "supabase",
+    "cloudflare",
+    "vercel",
+    "security-audit",
+    "enterprise-architecture",
+    "rls",
+    "zero-cls"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josiahdev1/next-supabase-enterprise-engine.git"
+  },
+  "author": "josiahdev1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josiahdev1/next-supabase-enterprise-engine/issues"
+  },
+  "homepage": "https://github.com/josiahdev1/next-supabase-enterprise-engine#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

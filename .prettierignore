@@ -5,3 +5,4 @@ dist
 build
 public
 package-lock.json
+.agent/
