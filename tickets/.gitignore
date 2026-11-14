@@ -1,0 +1,6 @@
+# Ignore all files in this directory
+*
+
+# Except the template and this ignore file
+!TEMPLATE.md
+!.gitignore
