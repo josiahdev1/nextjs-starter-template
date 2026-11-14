@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -34,8 +34,8 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore(ui): sync shadcn components"
-          title: "chore: update shadcn UI components"
-          body: "Automated weekly sync with latest upstream Shadcn UI component changes."
-          branch: "automation/update-shadcn"
+          commit-message: 'chore(ui): sync shadcn components'
+          title: 'chore: update shadcn UI components'
+          body: 'Automated weekly sync with latest upstream Shadcn UI component changes.'
+          branch: 'automation/update-shadcn'
           delete-branch: true

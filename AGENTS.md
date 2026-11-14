@@ -130,10 +130,12 @@ If a script does not exist in `package.json`, write "N/A (script not configured)
    - Server client: `src/lib/supabase/server.ts` (`createServerClient` with Next.js cookies)
    - Session refresh: Next.js 16 renamed `middleware` to `proxy`. Confirm in `node_modules/next/dist/docs/` before writing it.
    - Use `getUser()` (not `getSession()`) for server-side auth checks.
-4. **Database changes**:
-   - Schema in `supabase/migrations/NNNN_<slug>.sql` (additive, `IF NOT EXISTS`). Seeds in `supabase/seed.sql`.
-   - **Enable RLS on every table in `public`** with explicit policies.
-   - If Supabase MCP tools are available for project `<SUPABASE_PROJECT_REF>`, apply migrations with `apply_migration` and seeds with `execute_sql`, then verify table and row counts. Otherwise use `npx supabase db push`.
+4. **Database changes & Autonomous Migration Rule**:
+   - Numbered schema in `supabase/migrations/NNNN_<slug>.sql` (additive, `IF NOT EXISTS`). Seeds in `supabase/seed.sql`.
+   - **Enable RLS on every table in `public`** with explicit policies (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY;`).
+   - **Realtime Publication**: For any table requiring live UI updates, add it to `supabase_realtime`: `ALTER PUBLICATION supabase_realtime ADD TABLE <table_name>;`.
+   - **Automatic Push (No Manual SQL)**: Whenever any database table, column, policy, function, or Realtime requirement is created or changed, the AI agent MUST write a numbered migration file in `supabase/migrations/NNNN_<slug>.sql` with RLS enabled, and automatically push pending migrations to the remote Supabase project via **Supabase MCP** (`apply_migration` / `execute_sql`) or **`npx supabase db push`**.
+   - **NO MANUAL SQL INSTRUCTIONS**: Never tell the user to manually copy-paste SQL into the Supabase Dashboard SQL Editor unless BOTH Supabase MCP and the Supabase CLI fail/are unauthenticated—and only then provide the exact SQL as a last-resort fallback.
    - Document every table touched in section 3 of the ticket.
 
 ## Playwright End-to-End Verification (UI Tickets)
@@ -156,13 +158,13 @@ Skills live in `.agent/skills/<name>/SKILL.md` and are the **source of truth** f
 
 ### 1. Which skill to read (before starting the work)
 
-| Skill | Read it before |
-|-------|----------------|
-| `supabase` | ANY Supabase task: database, Auth, RLS, Storage, Realtime, Edge Functions, migrations, CLI, MCP, debugging |
-| `supabase-postgres-best-practices` | Writing or changing anything in Postgres: tables, types, migrations, indexes, RLS policies, functions, triggers, queries, slow-query diagnosis |
-| `supabase-realtime-data` | Building live-update features (Realtime subscriptions, live dashboards, presence). **Patterns only** (see 3.5) |
-| `security-audit` | Security questions, reviews of auth, RLS, API routes, uploads, secrets, dependencies, or any request to audit or pen-test |
-| `engineering-skills` | Architecture (RSC, Server Actions, Route Handlers), data modeling, caching, background jobs, CI/CD and deployment, performance, testing, code review |
+| Skill                              | Read it before                                                                                                                                       |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `supabase`                         | ANY Supabase task: database, Auth, RLS, Storage, Realtime, Edge Functions, migrations, CLI, MCP, debugging                                           |
+| `supabase-postgres-best-practices` | Writing or changing anything in Postgres: tables, types, migrations, indexes, RLS policies, functions, triggers, queries, slow-query diagnosis       |
+| `supabase-realtime-data`           | Building live-update features (Realtime subscriptions, live dashboards, presence). **Patterns only** (see 3.5)                                       |
+| `security-audit`                   | Security questions, reviews of auth, RLS, API routes, uploads, secrets, dependencies, or any request to audit or pen-test                            |
+| `engineering-skills`               | Architecture (RSC, Server Actions, Route Handlers), data modeling, caching, background jobs, CI/CD and deployment, performance, testing, code review |
 
 - Read the relevant `SKILL.md` and then only the reference files it points to for the task. Do not bulk-read an entire skill folder.
 - In `5. Notes & Dependencies` of the active ticket, list which skills were read.

@@ -37,6 +37,7 @@ Open http://localhost:3000. That's it, no environment variables are needed.
 | `npm run dev`          | Start the dev server (Turbopack)  |
 | `npm run build`        | Production build                  |
 | `npm run start`        | Run the production build          |
+| `npm test`             | Run automated test suite (`tsx`)  |
 | `npm run lint`         | ESLint (`eslint .`)               |
 | `npm run lint:fix`     | ESLint with auto-fix              |
 | `npm run typecheck`    | TypeScript check (`tsc --noEmit`) |
@@ -49,13 +50,19 @@ Open http://localhost:3000. That's it, no environment variables are needed.
 
 ```text
 src/
-  app/            App Router (layout.tsx, page.tsx, globals.css)
-  components/ui/  shadcn/ui components
-  hooks/          use-mobile, use-highlighted-code
-  lib/            utils (cn), highlighter
-tickets/          Ticket template + tickets (AI workflow)
-.github/          CI, Dependabot, shadcn sync workflows
-AGENTS.md         Rules for AI coding agents
+  app/               App Router (layout.tsx, page.tsx, globals.css)
+  app/supabase-test/ Live Supabase diagnostic & Realtime verification page
+  components/ui/     shadcn/ui components (50+)
+  hooks/             use-mobile, use-highlighted-code
+  lib/supabase/      Next.js 16 SSR clients, proxy session refresh, status helpers
+  lib/               utils (cn), highlighter
+supabase/
+  migrations/        Numbered SQL migrations (RLS + Realtime enabled)
+  README.md          Autonomous database migration & push rules
+tickets/             Ticket template + git-ignored local tickets (AI workflow)
+.agent/skills/       Pre-installed AI agent skills
+.github/             CI, Dependabot, shadcn sync workflows
+AGENTS.md            Rules for AI coding agents
 ```
 
 ## Using shadcn/ui
@@ -69,87 +76,64 @@ Run `--all` on a clean git tree. It may overwrite files you edited. Add `--overw
 
 ## Using Supabase (optional)
 
-Skip this section if you don't need a backend.
+Supabase client libraries (`@supabase/supabase-js`, `@supabase/ssr`), Next.js 16 session refresh proxy, database migration directories, and diagnostic tools are pre-installed out of the box with zero boilerplate. If you don't need a backend, no action is needed—the project builds and runs cleanly without Supabase credentials.
 
-### Step 1: Create a Supabase project
+When you're ready to connect Supabase:
 
-Go to supabase.com, create a project, then open **Project Settings → API** and copy the **Project URL** and the **publishable key**.
+### 1. Configure environment variables
 
-### Step 2: Install packages
-
-```bash
-npm install @supabase/supabase-js @supabase/ssr
-```
-
-### Step 3: Add Supabase Library blocks (shadcn registry)
-
-```bash
-npx shadcn@latest add @supabase/supabase-client-nextjs
-```
-
-These add ready-made UI blocks for auth, realtime, storage, and more (see supabase.com/library).
-
-### Step 4: Set environment variables
-
-Copy the example file and fill it in:
+Copy `.env.example` to `.env.local`:
 
 ```bash
 cp .env.example .env.local
 ```
 
-```bash
-# .env.local
-NEXT_PUBLIC_SUPABASE_URL=https://<SUPABASE_PROJECT_REF>.supabase.co
+Fill in your Supabase project credentials (from your Supabase Dashboard under Project Settings → API):
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-publishable-key>
 ```
 
-- `.env.local` is git-ignored. **Never commit it.**
-- Only the publishable key may be used in the browser. **Never** put a secret / service-role key in a `NEXT_PUBLIC_*` variable.
-- Restart `npm run dev` after editing.
+### 2. Verify connection & Realtime
 
-### Step 5: Install Agent Skills (optional)
+Restart your dev server (`npm run dev`) and visit **`http://localhost:3000/supabase-test`**:
 
-Gives AI coding tools ready-made Supabase instructions:
+- Checks environment credentials without exposing secrets.
+- Compares local migrations against applied migrations on remote database.
+- Establishes a live Supabase Realtime WebSocket connection to verify subscriptions.
+
+### 3. Push migrations autonomously
+
+Tell your AI coding agent (Antigravity, Claude Code, Cursor, Windsurf, etc.) to apply pending migrations via **Supabase MCP** or run:
 
 ```bash
-npx skills add supabase/agent-skills
+npx supabase db push
 ```
 
-### Step 6: Create the clients
+> **Zero Manual SQL**: AI agents automatically push numbered migrations with Row Level Security (RLS) enabled. Never manually copy-paste SQL in the Dashboard unless automated tools are completely unavailable.
 
-- `src/lib/supabase/client.ts` for the browser (`createBrowserClient`)
-- `src/lib/supabase/server.ts` for the server (`createServerClient` + cookies)
-- A session-refresh file (Next.js 16 uses `proxy`, check `node_modules/next/dist/docs/`)
+### 4. Deploying with Supabase
 
-The easiest path is to let your AI agent do steps 2 to 6 for you (see "Working with AI agents").
+Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to your hosting provider (e.g., Vercel → Project Settings → Environment Variables) and to **GitHub → Settings → Secrets and variables → Actions** if CI builds require them.
 
-### Step 7: Database changes
+## Agent Skills
 
-1. Put SQL in `supabase/migrations/NNNN_<name>.sql`.
-2. Enable **Row Level Security** on every table and add policies.
-3. Apply with `npx supabase db push` (or Supabase MCP).
+Five skills live in `.agent/skills/` (and `.claude/skills/`) and are routed through `AGENTS.md`:
 
-### Deploying with Supabase
-
-Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in your host (e.g. Vercel → Project Settings → Environment Variables) and, if your build needs them, in GitHub → Settings → Secrets and variables → Actions.
-
-### Agent Skills
-
-Five skills live in `.agent/skills/` and are read by AI agents through the router section in `AGENTS.md`:
-
-| Skill | Purpose |
-|-------|---------|
-| `supabase` | Supabase products, auth, RLS, CLI, security checklist |
-| `supabase-postgres-best-practices` | Postgres schema, indexes, RLS performance, connections |
-| `supabase-realtime-data` | Realtime subscription patterns |
-| `security-audit` | Defensive security review workflow and 14 threat handbooks |
-| `engineering-skills` | Architecture, backend, DevOps, performance, testing practices |
+| Skill                              | Purpose                                                                                                                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `supabase`                         | Official Supabase docs lookup, Auth (`getClaims`, SSR cookies), RLS security checklist, Edge Functions, Storage, CLI & MCP |
+| `supabase-postgres-best-practices` | Postgres schema design, query optimization, indexes, connection pooling, and RLS performance                               |
+| `supabase-realtime-data`           | Realtime subscription patterns and `supabase_realtime` publication setup                                                   |
+| `security-audit`                   | Defensive security review workflow and 14 threat handbooks                                                                 |
+| `engineering-skills`               | Architecture, backend, DevOps, performance, and testing practices                                                          |
 
 ## Working with AI agents (ticket workflow)
 
 This repo is set up for AI coding agents. They read `AGENTS.md` and follow a **ticket-first** workflow:
 
-1. Every change has a ticket in `tickets/ticket-XX-<slug>.md` (copy `tickets/TEMPLATE.md`).
+1. Every change has a ticket in `tickets/ticket-XX-<slug>.md` (copy `tickets/TEMPLATE.md`). Local tickets stay in `tickets/` and are ignored by Git via `tickets/.gitignore`.
 2. The agent sets it `IN PROGRESS`, implements, records **real** lint/type/build results, then sets `COMPLETED`.
 
 Starter prompt to give your agent:
@@ -157,12 +141,6 @@ Starter prompt to give your agent:
 ```text
 Read AGENTS.md and tickets/TEMPLATE.md, then create the next ticket for: <what you want>.
 Follow the ticket-first workflow and record real verification output.
-```
-
-To add Supabase through an agent:
-
-```text
-Create the next ticket "supabase-integration". Follow the Supabase (Optional) section of AGENTS.md and docs/supabase-setup.md. Do not overwrite or print .env.local.
 ```
 
 ## CI/CD

@@ -46,6 +46,7 @@ None
 ## 5. Notes & Dependencies
 
 ### 5 Skills Added
+
 1. `supabase` (`.agent/skills/supabase/SKILL.md`)
 2. `supabase-postgres-best-practices` (`.agent/skills/supabase-postgres-best-practices/SKILL.md`)
 3. `supabase-realtime-data` (`.agent/skills/supabase-realtime-data/SKILL.md`)
@@ -53,6 +54,7 @@ None
 5. `engineering-skills` (`.agent/skills/engineering-skills/SKILL.md`)
 
 ### 5 Conflict Resolutions (B-Part 3 Section 3)
+
 1. **`SECURITY DEFINER`**: Default to `SECURITY INVOKER`. Use `SECURITY DEFINER` only for atomic/locking procedures (`SELECT ... FOR UPDATE`) or RLS helper functions that truly need it, with pinned `search_path`, an `auth.uid()` check, non-exposed schema when not called from client, `EXECUTE` revoked from `PUBLIC`/`anon` if called via `supabase.rpc`, and Supabase advisors run after; `supabase` skill wins when unsure.
 2. **Cloudflare (WAF, Turnstile, edge rules)**: Apply only if the project actually uses Cloudflare; otherwise use Vercel/Next.js equivalents (nonce-based CSP, rate limiting) and do not add Cloudflare dependencies.
 3. **UI standards from `security-audit` templates (file `04`)**: `AGENTS.md` shadcn/ui and Tailwind rules win for components and classes; keep only structural ideas (skeleton fallbacks preventing layout shift, >= 48px touch targets on touch-first UIs).
@@ -60,4 +62,5 @@ None
 5. **`supabase-realtime-data`**: Patterns only (`postgres_changes`, server-rendered fallback, no fake loops in production); do not create its example tables, copy its URL/key, or use `src/utils/supabase` paths (project uses `src/lib/supabase/client.ts`, `src/lib/supabase/server.ts`, and `.env.local`).
 
 ### Additional Notes
+
 - `AGENTS.md` and `README.md` were not auto-reformatted with Prettier so existing sections remain byte-for-byte untouched per Book B instructions.
