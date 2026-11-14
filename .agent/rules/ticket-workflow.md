@@ -27,5 +27,9 @@ You must automatically follow the starter pack's **Ticket-First Development Work
    - For UI changes, verify the live app via Playwright across `1440x900`, `1280x800`, and `390x844` with zero console/hydration errors.
    - Set `**Status**: COMPLETED` in the ticket, stage and commit all changes (`git add . && git commit -m "ticket-XX: <short summary>"`), update `**Commit SHA**` in the local ticket, and push to `origin/dev` (`git push -u origin dev`).
 
-4. **Exception**:
+4. **Starter-Template Landing Page Sync & Downstream User Protection**:
+   - **Starter-Template Landing Page Sync**: Whenever new starter-pack features, dependencies, routes, skills, or workflows are added or updated in this template repository, update the starter showcase section in `src/app/page.tsx` so `http://localhost:3000/` accurately reflects what's new in the codebase—using only real features present in the repo.
+   - **Downstream User Protection**: Only update `src/app/page.tsx` if the starter-pack showcase section (`data-starter-showcase="true"`) is still present. If a developer clones this template and replaces `src/app/page.tsx` with their own custom app/landing page, NEVER overwrite or re-inject starter-pack template sections into their custom `src/app/page.tsx`.
+
+5. **Exception**:
    - Skip ticket creation **ONLY** when the user asks a purely read-only question (no file edits) or explicitly says `"no ticket"` / `"read-only"`.

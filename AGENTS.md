@@ -166,6 +166,13 @@ For any ticket that changes UI or behavior, run Playwright against the live app 
 3. **Agent Skills Path**:
    - All agent skills live strictly in `.agent/skills/` (never pass `--all` when installing skills so duplicate `.agents/` or `agent/` folders are not created).
 
+## Starter-Template Landing Page Sync (`src/app/page.tsx`)
+
+1. **Starter-Template Landing Page Sync**:
+   - Whenever new starter-pack features, dependencies, routes, skills, or workflows are added or updated in this template repository, update the starter showcase section in `src/app/page.tsx` so `http://localhost:3000/` accurately reflects what's new in the codebase—using only real features present in the repo.
+2. **Downstream User Protection**:
+   - Only update `src/app/page.tsx` if the starter-pack showcase section (`data-starter-showcase="true"`) is still present. If a developer clones this template and replaces `src/app/page.tsx` with their own custom app/landing page, NEVER overwrite or re-inject starter-pack template sections into their custom `src/app/page.tsx`.
+
 <!-- END:starter-pack-additions -->
 
 ---

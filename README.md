@@ -165,4 +165,4 @@ If your build needs Supabase variables, add them as **GitHub Actions secrets** n
 
 ## License
 
-<Your license>
+This project is licensed under the [MIT License](./LICENSE).
