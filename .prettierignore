@@ -6,4 +6,5 @@ build
 public
 package-lock.json
 .agent/
+.vercel
 tickets/ticket-*.md
