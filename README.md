@@ -124,10 +124,11 @@ Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to you
 
 ## Agent Skills
 
-Five skills live in `.agent/skills/` (and `.claude/skills/`) and are routed through `AGENTS.md`:
+Six skills live in `.agent/skills/` (and `.claude/skills/`) and are routed through `AGENTS.md`:
 
 | Skill                              | Purpose                                                                                                                    |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `frontend-design`                  | Mandatory `shadcn/ui` First architecture, card/grid layout guardrails, OKLCH theme tokens, and responsive UI standards     |
 | `supabase`                         | Official Supabase docs lookup, Auth (`getClaims`, SSR cookies), RLS security checklist, Edge Functions, Storage, CLI & MCP |
 | `supabase-postgres-best-practices` | Postgres schema design, query optimization, indexes, connection pooling, and RLS performance                               |
 | `supabase-realtime-data`           | Realtime subscription patterns and `supabase_realtime` publication setup                                                   |

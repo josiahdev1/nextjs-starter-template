@@ -5,18 +5,39 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import type { SupabaseStatusResult } from '@/lib/supabase/migrations-status'
 import {
-  CheckCircle2,
   AlertCircle,
+  ArrowLeft,
+  CheckCircle2,
   Database,
+  FileCode2,
+  Globe,
+  Key,
+  Plus,
   Radio,
   RefreshCw,
-  Plus,
   Terminal,
-  ArrowLeft,
-  Key,
-  Globe,
-  FileCode2,
+  Trash2,
 } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 interface RealtimeEvent {
   id: string
@@ -164,16 +185,18 @@ export default function SupabaseTestPage() {
     }
   }
 
-  const getStatusBadge = (chStatus: string) => {
+  const getChannelBadgeVariant = (
+    chStatus: string
+  ): 'default' | 'secondary' | 'destructive' | 'outline' => {
     switch (chStatus) {
       case 'SUBSCRIBED':
-        return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400'
+        return 'default'
       case 'CONNECTING':
-        return 'bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400'
+        return 'secondary'
       case 'UNCONFIGURED':
-        return 'bg-zinc-500/10 text-zinc-600 border-zinc-500/20 dark:text-zinc-400'
+        return 'outline'
       default:
-        return 'bg-rose-500/10 text-rose-600 border-rose-500/20 dark:text-rose-400'
+        return 'destructive'
     }
   }
 
@@ -182,273 +205,355 @@ export default function SupabaseTestPage() {
     : channelStatus
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-10 font-sans text-zinc-900 transition-colors dark:bg-black dark:text-zinc-100">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        {/* Navigation & Header */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-black dark:text-zinc-400 dark:hover:text-white"
+    <div className="bg-background text-foreground min-h-screen py-10 font-sans">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 sm:px-6">
+        {/* Top Navigation Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/" />}
           >
             <ArrowLeft className="size-4" />
-            Back to Home
-          </Link>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={fetchStatus}
-              disabled={loadingStatus}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-2xs transition-colors hover:bg-zinc-100 disabled:opacity-50 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-            >
-              <RefreshCw
-                className={`size-3.5 ${loadingStatus ? 'animate-spin' : ''}`}
-              />
-              Refresh Status
-            </button>
-          </div>
+            <span>Back to Home</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchStatus}
+            disabled={loadingStatus}
+          >
+            <RefreshCw
+              className={`size-3.5 ${loadingStatus ? 'animate-spin' : ''}`}
+            />
+            <span>Refresh Status</span>
+          </Button>
         </div>
 
-        <div className="mb-8">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Supabase Diagnostics & Realtime Test
-            </h1>
+        {/* Page Title & Summary */}
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary">Supabase SSR + Realtime</Badge>
+            <Badge variant="outline">Diagnostic Inspector</Badge>
           </div>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Verify database credentials, migration sync status, and live
-            WebSocket subscriptions.
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Supabase Diagnostics &amp; Realtime Test
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Verify database credentials, local-vs-remote migration sync status,
+            and live WebSocket replication on{' '}
+            <Badge variant="outline" className="font-mono text-[11px]">
+              public.todos
+            </Badge>
+            .
           </p>
         </div>
 
-        {/* 1. Environment Status Card */}
-        <div className="mb-6 rounded-2xl border border-black/8 bg-white p-6 shadow-2xs dark:border-white/10 dark:bg-zinc-900">
-          <div className="flex items-center justify-between border-b border-black/6 pb-4 dark:border-white/10">
-            <div className="flex items-center gap-2.5">
-              <Key className="size-5 text-indigo-500" />
-              <h2 className="text-base font-semibold">
-                1. Environment Credentials
-              </h2>
-            </div>
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${
-                status?.isConfigured
-                  ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                  : 'border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400'
-              }`}
-            >
-              {status?.isConfigured ? (
-                <>
-                  <CheckCircle2 className="size-3.5" /> Configured
-                </>
-              ) : (
-                <>
-                  <AlertCircle className="size-3.5" /> Missing or Default
-                </>
-              )}
-            </span>
-          </div>
+        <Separator />
 
-          <div className="mt-4 space-y-3">
-            <div className="flex flex-col justify-between gap-1 rounded-xl bg-zinc-50 p-3 text-xs sm:flex-row sm:items-center dark:bg-zinc-800/60">
-              <span className="flex items-center gap-2 font-mono text-zinc-500 dark:text-zinc-400">
-                <Globe className="size-3.5" /> NEXT_PUBLIC_SUPABASE_URL
-              </span>
-              <span className="font-mono font-medium text-zinc-800 dark:text-zinc-200">
-                {status?.maskedUrl || 'Not provided'}
-              </span>
+        {/* 1. Environment Credentials Card */}
+        <Card>
+          <CardHeader className="border-b">
+            <div className="flex items-center justify-between gap-2">
+              <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                <Key className="text-primary size-4" />
+              </div>
+              <Badge
+                variant={status?.isConfigured ? 'default' : 'secondary'}
+                className="shrink-0"
+              >
+                {status?.isConfigured ? (
+                  <>
+                    <CheckCircle2 className="size-3" />
+                    <span>Configured</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle className="size-3" />
+                    <span>Missing or Default</span>
+                  </>
+                )}
+              </Badge>
             </div>
+            <CardTitle className="pt-3 text-base leading-snug">
+              1. Environment Credentials
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Masked environment variables read from{' '}
+              <code className="font-mono">.env.local</code> without exposing raw
+              keys.
+            </CardDescription>
+          </CardHeader>
 
-            <div className="flex flex-col justify-between gap-1 rounded-xl bg-zinc-50 p-3 text-xs sm:flex-row sm:items-center dark:bg-zinc-800/60">
-              <span className="flex items-center gap-2 font-mono text-zinc-500 dark:text-zinc-400">
-                <Key className="size-3.5" />{' '}
-                NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-              </span>
-              <span className="font-mono font-medium text-zinc-800 dark:text-zinc-200">
-                {status?.maskedKey || 'Not provided'}
-              </span>
+          <CardContent className="flex flex-col gap-4 pt-2">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <Card size="sm" className="flex h-full flex-col">
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="bg-muted/50 flex size-8 items-center justify-center rounded-lg border">
+                      <Globe className="text-muted-foreground size-4" />
+                    </div>
+                    <Badge variant="outline" className="shrink-0 font-mono">
+                      Project URL
+                    </Badge>
+                  </div>
+                  <CardTitle className="pt-2 font-mono text-xs leading-snug">
+                    NEXT_PUBLIC_SUPABASE_URL
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <Badge
+                    variant="secondary"
+                    className="max-w-full truncate font-mono text-xs"
+                  >
+                    {status?.maskedUrl || 'Not provided'}
+                  </Badge>
+                </CardContent>
+              </Card>
+
+              <Card size="sm" className="flex h-full flex-col">
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="bg-muted/50 flex size-8 items-center justify-center rounded-lg border">
+                      <Key className="text-muted-foreground size-4" />
+                    </div>
+                    <Badge variant="outline" className="shrink-0 font-mono">
+                      Publishable Key
+                    </Badge>
+                  </div>
+                  <CardTitle className="pt-2 font-mono text-xs leading-snug">
+                    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <Badge
+                    variant="secondary"
+                    className="max-w-full truncate font-mono text-xs"
+                  >
+                    {status?.maskedKey || 'Not provided'}
+                  </Badge>
+                </CardContent>
+              </Card>
             </div>
 
             {!status?.isConfigured && (
-              <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-xs text-amber-800 dark:text-amber-200">
-                <p className="mb-1 font-semibold">How to configure:</p>
-                <ol className="list-inside list-decimal space-y-1">
-                  <li>
-                    Copy{' '}
-                    <code className="rounded bg-black/6 px-1 dark:bg-white/10">
-                      .env.example
-                    </code>{' '}
-                    to{' '}
-                    <code className="rounded bg-black/6 px-1 dark:bg-white/10">
-                      .env.local
-                    </code>
-                  </li>
-                  <li>
-                    Paste your project URL and publishable key from Supabase
-                    Dashboard &gt; Project Settings &gt; API
-                  </li>
-                  <li>
-                    Restart{' '}
-                    <code className="rounded bg-black/6 px-1 dark:bg-white/10">
-                      npm run dev
-                    </code>{' '}
-                    and refresh this page
-                  </li>
-                </ol>
-              </div>
+              <Alert>
+                <AlertCircle className="size-4" />
+                <AlertTitle>How to configure Supabase locally</AlertTitle>
+                <AlertDescription>
+                  Copy <code className="font-mono">.env.example</code> to{' '}
+                  <code className="font-mono">.env.local</code>, paste your
+                  project URL and publishable key from{' '}
+                  <strong>Supabase Dashboard → Project Settings → API</strong>,
+                  then restart <code className="font-mono">npm run dev</code>.
+                </AlertDescription>
+              </Alert>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* 2. Migration Sync Status Card */}
-        <div className="mb-6 rounded-2xl border border-black/8 bg-white p-6 shadow-2xs dark:border-white/10 dark:bg-zinc-900">
-          <div className="flex items-center justify-between border-b border-black/6 pb-4 dark:border-white/10">
-            <div className="flex items-center gap-2.5">
-              <Database className="size-5 text-emerald-500" />
-              <h2 className="text-base font-semibold">
-                2. Database Migrations Status
-              </h2>
+        {/* 2. Database Migrations Status Card */}
+        <Card>
+          <CardHeader className="border-b">
+            <div className="flex items-center justify-between gap-2">
+              <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                <Database className="text-primary size-4" />
+              </div>
+              <Badge variant="outline" className="shrink-0">
+                {status?.localMigrations.length || 0} local migration file(s)
+              </Badge>
             </div>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              {status?.localMigrations.length || 0} local migration file(s)
-            </span>
-          </div>
+            <CardTitle className="pt-3 text-base leading-snug">
+              2. Database Migrations Status
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Compares numbered SQL files in{' '}
+              <code className="font-mono">supabase/migrations/</code> against
+              the remote project schema.
+            </CardDescription>
+          </CardHeader>
 
-          <div className="mt-4">
+          <CardContent className="flex flex-col gap-4 pt-2">
             {status?.localMigrations && status.localMigrations.length > 0 ? (
-              <div className="divide-y divide-black/6 overflow-hidden rounded-xl border border-black/8 dark:divide-white/10 dark:border-white/10">
-                {status.migrationDiff.map((item) => (
-                  <div
-                    key={item.filename}
-                    className="flex items-center justify-between bg-white p-3 text-xs dark:bg-zinc-900/60"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <FileCode2 className="size-4 text-zinc-400" />
-                      <div>
-                        <span className="font-mono font-medium text-zinc-900 dark:text-zinc-100">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Migration File</TableHead>
+                    <TableHead>Version</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead className="text-right">Sync Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {status.migrationDiff.map((item) => (
+                    <TableRow key={item.filename}>
+                      <TableCell className="font-mono text-xs font-medium">
+                        <span className="inline-flex items-center gap-2">
+                          <FileCode2 className="text-muted-foreground size-3.5 shrink-0" />
                           {item.filename}
                         </span>
-                        <p className="text-[11px] text-zinc-500 capitalize dark:text-zinc-400">
-                          {item.name}
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
-                        item.status === 'APPLIED'
-                          ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                          : 'border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="font-mono">
+                          {item.version}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground text-xs capitalize">
+                        {item.name}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Badge
+                          variant={
+                            item.status === 'APPLIED' ? 'default' : 'secondary'
+                          }
+                        >
+                          {item.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                No migration files found in supabase/migrations/
-              </p>
+              <Alert>
+                <FileCode2 className="size-4" />
+                <AlertTitle>No local migrations found</AlertTitle>
+                <AlertDescription>
+                  Add numbered SQL files in{' '}
+                  <code className="font-mono">supabase/migrations/</code> to
+                  track schema changes.
+                </AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
+
+          <CardFooter className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-muted-foreground inline-flex items-center gap-2 text-xs">
+              <Terminal className="size-3.5 shrink-0" />
+              <span>
+                Push pending migrations via Supabase MCP or CLI command:
+              </span>
+            </span>
+            <Badge variant="secondary" className="font-mono text-xs">
+              npx supabase db push
+            </Badge>
+          </CardFooter>
+        </Card>
+
+        {/* 3. Live Supabase Realtime Subscription Card */}
+        <Card>
+          <CardHeader className="border-b">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                <Radio className="text-primary size-4" />
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  variant={getChannelBadgeVariant(activeChannelStatus)}
+                  className="shrink-0"
+                >
+                  {activeChannelStatus}
+                </Badge>
+                <Button
+                  size="sm"
+                  onClick={handleInsertTestTodo}
+                  disabled={isInserting || !status?.isConfigured}
+                >
+                  <Plus className="size-3.5" />
+                  <span>
+                    {isInserting ? 'Inserting...' : 'Insert Test Record'}
+                  </span>
+                </Button>
+              </div>
+            </div>
+            <CardTitle className="pt-3 text-base leading-snug">
+              3. Live Supabase Realtime Subscription
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Subscribed to{' '}
+              <Badge variant="outline" className="font-mono text-[11px]">
+                postgres_changes
+              </Badge>{' '}
+              events on table{' '}
+              <Badge variant="outline" className="font-mono text-[11px]">
+                public.{status?.realtimeTable || 'todos'}
+              </Badge>
+              .
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="flex flex-col gap-4 pt-2">
+            {actionMessage && (
+              <Alert>
+                <Terminal className="size-4" />
+                <AlertTitle>Realtime Action</AlertTitle>
+                <AlertDescription>{actionMessage}</AlertDescription>
+              </Alert>
             )}
 
-            <div className="mt-4 flex items-center gap-2 rounded-xl bg-zinc-100 p-3 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-              <Terminal className="size-4 shrink-0 text-zinc-500" />
-              <span>
-                To push pending migrations: ask your AI agent to apply via
-                Supabase MCP or run{' '}
-                <code className="font-mono font-semibold text-black dark:text-white">
-                  npx supabase db push
-                </code>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Live Realtime Connection & Subscription Card */}
-        <div className="rounded-2xl border border-black/8 bg-white p-6 shadow-2xs dark:border-white/10 dark:bg-zinc-900">
-          <div className="flex flex-col gap-3 border-b border-black/6 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/10">
-            <div className="flex items-center gap-2.5">
-              <Radio className="size-5 animate-pulse text-cyan-500" />
-              <div>
-                <h2 className="text-base font-semibold">
-                  3. Live Supabase Realtime Subscription
-                </h2>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Subscribed to table:{' '}
-                  <code className="font-mono font-medium">public.todos</code>
-                </p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium">Live Event Stream</span>
+                <Badge variant="outline" className="font-mono">
+                  {realtimeEvents.length} events
+                </Badge>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${getStatusBadge(
-                  activeChannelStatus
-                )}`}
-              >
-                <span className="size-2 animate-ping rounded-full bg-current" />
-                {activeChannelStatus}
-              </span>
-              <button
-                onClick={handleInsertTestTodo}
-                disabled={isInserting || !status?.isConfigured}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-black px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-              >
-                <Plus className="size-3.5" />
-                {isInserting ? 'Inserting...' : 'Insert Test Record'}
-              </button>
-            </div>
-          </div>
-
-          {actionMessage && (
-            <div className="mt-4 rounded-xl bg-zinc-100 p-3 text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-              {actionMessage}
-            </div>
-          )}
-
-          <div className="mt-4">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                Live Event Stream ({realtimeEvents.length} events)
-              </span>
               {realtimeEvents.length > 0 && (
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   onClick={() => setRealtimeEvents([])}
-                  className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
                 >
-                  Clear stream
-                </button>
+                  <Trash2 className="size-3" />
+                  <span>Clear stream</span>
+                </Button>
               )}
             </div>
 
             {realtimeEvents.length > 0 ? (
-              <div className="max-h-60 divide-y divide-black/6 overflow-y-auto rounded-xl border border-black/8 font-mono text-xs dark:divide-white/10 dark:border-white/10">
-                {realtimeEvents.map((evt) => (
-                  <div
-                    key={evt.id}
-                    className="bg-zinc-50/50 p-3 dark:bg-zinc-950/40"
-                  >
-                    <div className="mb-1 flex items-center justify-between">
-                      <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                        {evt.eventType}
-                      </span>
-                      <span className="text-[10px] text-zinc-400">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Event</TableHead>
+                    <TableHead>Timestamp</TableHead>
+                    <TableHead>Payload</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {realtimeEvents.map((evt) => (
+                    <TableRow key={evt.id}>
+                      <TableCell>
+                        <Badge variant="secondary" className="font-mono">
+                          {evt.eventType}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground font-mono text-xs">
                         {evt.timestamp}
-                      </span>
-                    </div>
-                    <pre className="overflow-x-auto text-[11px] text-zinc-700 dark:text-zinc-300">
-                      {JSON.stringify(evt.payload, null, 2)}
-                    </pre>
-                  </div>
-                ))}
-              </div>
+                      </TableCell>
+                      <TableCell className="font-mono text-xs">
+                        <code className="bg-muted rounded px-1.5 py-0.5">
+                          {JSON.stringify(evt.payload)}
+                        </code>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-black/10 py-8 text-center dark:border-white/10">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  No live events received yet. Click &quot;Insert Test
-                  Record&quot; to test WebSocket replication.
-                </p>
-              </div>
+              <Alert>
+                <Radio className="size-4" />
+                <AlertTitle>Waiting for live WebSocket events</AlertTitle>
+                <AlertDescription>
+                  No live events received yet. Connect your Supabase project in{' '}
+                  <code className="font-mono">.env.local</code> and click{' '}
+                  <strong>Insert Test Record</strong> to verify WebSocket
+                  replication.
+                </AlertDescription>
+              </Alert>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

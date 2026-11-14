@@ -23,7 +23,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -257,7 +256,7 @@ const starterStackCards = [
     badge: 'Always-On /ticket',
     icon: <Bot className="size-4 text-indigo-500" />,
     description:
-      'Automatic ticket-first rules across Antigravity, Claude Code, Cursor, and Copilot with 5 domain skills for Supabase, Postgres, Realtime, Security, and Engineering.',
+      'Automatic ticket-first rules across Antigravity, Claude Code, Cursor, and Copilot with 6 domain skills for Frontend Design, Supabase, Postgres, Realtime, Security, and Engineering.',
     files: [
       'AGENTS.md',
       'CLAUDE.md',
@@ -306,23 +305,26 @@ const starterStackCards = [
 const starterInventoryStats = [
   {
     label: 'Template Package',
-    value: `${packageJson.name} v${packageJson.version}`,
+    badge: `v${packageJson.version}`,
+    value: packageJson.name,
     detail: `${Object.keys(packageJson.dependencies).length} runtime + ${Object.keys(packageJson.devDependencies).length} dev packages`,
   },
   {
     label: 'UI Component Library',
+    badge: 'base-nova',
     value: '56 Pre-installed',
-    detail:
-      'shadcn/ui (base-nova, @base-ui/react ^1.9.0) in src/components/ui/',
+    detail: 'shadcn/ui (@base-ui/react ^1.9.0) in src/components/ui/',
   },
   {
     label: 'Bundled Agent Skills',
-    value: '5 Domain Skills',
+    badge: '.agent/skills/',
+    value: '6 Domain Skills',
     detail:
-      'supabase, supabase-postgres-best-practices, supabase-realtime-data, security-audit, engineering-skills',
+      'frontend-design, supabase, supabase-postgres-best-practices, supabase-realtime-data, security-audit, engineering-skills',
   },
   {
     label: 'App Routes & API',
+    badge: 'App Router',
     value: '3 Active Endpoints',
     detail:
       '/ (Landing), /supabase-test (Diagnostics UI), /api/supabase-status (JSON)',
@@ -620,218 +622,232 @@ export default function Home() {
         aria-label="Starter Stack and Developer Quick Reference"
         className="w-full max-w-5xl px-6 pb-16 sm:px-14 sm:pb-24"
       >
-        <div className="bg-background text-foreground border-border flex flex-col gap-12 rounded-2xl border p-6 shadow-2xs sm:p-10">
-          {/* Section 1: Starter Stack & Features Grid */}
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-              <div className="flex flex-col gap-1.5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary">Starter Architecture</Badge>
-                  <Badge variant="outline">
-                    Next.js {packageJson.dependencies.next} • React{' '}
-                    {packageJson.dependencies.react}
-                  </Badge>
+        <Card className="p-2 sm:p-6">
+          <CardContent className="flex flex-col gap-10 pt-4">
+            {/* Section 1: Starter Stack & Features Grid */}
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary">Starter Architecture</Badge>
+                    <Badge variant="outline">
+                      Next.js {packageJson.dependencies.next} • React{' '}
+                      {packageJson.dependencies.react}
+                    </Badge>
+                  </div>
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                    Starter Stack &amp; Features Grid
+                  </h2>
+                  <p className="text-muted-foreground max-w-2xl text-sm">
+                    Every layer below is pre-installed and verified in this
+                    repository—from App Router conventions and OKLCH design
+                    tokens to AI agent workflows and optional Supabase
+                    diagnostics.
+                  </p>
                 </div>
-                <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  Starter Stack &amp; Features Grid
-                </h2>
-                <p className="text-muted-foreground max-w-2xl text-sm">
-                  Every layer below is pre-installed and verified in this
-                  repository—from App Router conventions and OKLCH design tokens
-                  to AI agent workflows and optional Supabase diagnostics.
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                nativeButton={false}
-                render={<Link href="/supabase-test" />}
-              >
-                <SupabaseIcon className="size-3.5" />
-                <span>Explore /supabase-test</span>
-                <ArrowUpRight className="size-3.5" />
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {starterStackCards.map((card) => (
-                <Card
-                  key={card.title}
-                  size="sm"
-                  className="justify-between transition-colors"
-                >
-                  <CardHeader>
-                    <div className="flex items-center gap-2">
-                      <span className="bg-muted border-border flex size-7 shrink-0 items-center justify-center rounded-lg border">
-                        {card.icon}
-                      </span>
-                      <CardTitle className="text-sm font-semibold">
-                        {card.title}
-                      </CardTitle>
-                    </div>
-                    <CardAction>
-                      <Badge variant="secondary">{card.badge}</Badge>
-                    </CardAction>
-                    <CardDescription className="pt-1 text-xs leading-relaxed">
-                      {card.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {card.files.map((filePath) => (
-                        <code
-                          key={filePath}
-                          className="bg-muted text-muted-foreground border-border rounded-md border px-1.5 py-0.5 font-mono text-[11px]"
-                        >
-                          {filePath}
-                        </code>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Section 2: What's Included & Quick Exploration Strip */}
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-              <div className="flex flex-col gap-1.5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary">Developer Quick Reference</Badge>
-                  <Badge variant="outline">Server-Read Inventory</Badge>
-                </div>
-                <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  What&apos;s Included &amp; Quick Exploration Strip
-                </h2>
-                <p className="text-muted-foreground max-w-2xl text-sm">
-                  Live repository inventory read directly from{' '}
-                  <code className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">
-                    package.json
-                  </code>
-                  , pre-configured routes, and one-click CLI scripts.
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
                 <Button
-                  variant="default"
+                  variant="outline"
                   size="sm"
                   nativeButton={false}
                   render={<Link href="/supabase-test" />}
                 >
                   <SupabaseIcon className="size-3.5" />
-                  <span>Open /supabase-test</span>
-                  <ArrowUpRight className="size-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  nativeButton={false}
-                  render={
-                    <a
-                      href="/api/supabase-status"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    />
-                  }
-                >
-                  <FolderGit2 className="size-3.5" />
-                  <span>/api/supabase-status</span>
+                  <span>Explore /supabase-test</span>
                   <ArrowUpRight className="size-3.5" />
                 </Button>
               </div>
-            </div>
 
-            {/* Live Repository Inventory Strip */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {starterInventoryStats.map((stat) => (
-                <Card key={stat.label} size="sm">
-                  <CardHeader>
-                    <CardDescription className="text-xs font-medium">
-                      {stat.label}
-                    </CardDescription>
-                    <CardTitle className="text-sm font-semibold">
-                      {stat.value}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-xs leading-relaxed">
-                      {stat.detail}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Package.json Scripts + Interactive Exploration */}
-            <Card size="sm">
-              <CardHeader className="border-b">
-                <div className="flex items-center gap-2">
-                  <Terminal className="text-primary size-4" />
-                  <CardTitle className="text-sm font-semibold">
-                    Key Scripts from package.json
-                  </CardTitle>
-                </div>
-                <CardAction>
-                  <Badge variant="outline">
-                    {starterScripts.length} NPM Scripts
-                  </Badge>
-                </CardAction>
-                <CardDescription className="text-xs">
-                  Standardized commands for development, ESLint 9 flat-config
-                  linting, TypeScript checking, unit testing, and production
-                  builds.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-1">
-                <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-                  {starterScripts.map((script) => (
-                    <div
-                      key={script.name}
-                      className="bg-muted/40 border-border flex items-center justify-between gap-3 rounded-lg border px-3 py-2"
-                    >
-                      <div className="flex min-w-0 flex-col gap-0.5">
-                        <div className="flex items-center gap-2">
-                          <code className="text-foreground font-mono text-xs font-semibold">
-                            {script.command}
-                          </code>
-                          <span className="text-muted-foreground truncate font-mono text-[11px]">
-                            ({script.rawCmd})
-                          </span>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {starterStackCards.map((card) => (
+                  <Card key={card.title} className="flex h-full flex-col">
+                    <CardHeader>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                          {card.icon}
                         </div>
-                        <span className="text-muted-foreground truncate text-xs">
-                          {script.description}
+                        <Badge variant="secondary" className="shrink-0">
+                          {card.badge}
+                        </Badge>
+                      </div>
+                      <CardTitle className="pt-3 text-base leading-snug">
+                        {card.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      <CardDescription className="text-xs leading-relaxed">
+                        {card.description}
+                      </CardDescription>
+                    </CardContent>
+                    <CardFooter className="flex flex-wrap gap-1.5 border-t-0 bg-transparent pt-0">
+                      {card.files.map((filePath) => (
+                        <Badge
+                          key={filePath}
+                          variant="outline"
+                          className="font-mono text-[11px]"
+                        >
+                          {filePath}
+                        </Badge>
+                      ))}
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Section 2: What's Included & Quick Exploration Strip */}
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary">Developer Quick Reference</Badge>
+                    <Badge variant="outline">Server-Read Inventory</Badge>
+                  </div>
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                    What&apos;s Included &amp; Quick Exploration Strip
+                  </h2>
+                  <p className="text-muted-foreground max-w-2xl text-sm">
+                    Live repository inventory read directly from{' '}
+                    <Badge variant="outline" className="font-mono text-[11px]">
+                      package.json
+                    </Badge>
+                    , pre-configured routes, and one-click CLI scripts.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    nativeButton={false}
+                    render={<Link href="/supabase-test" />}
+                  >
+                    <SupabaseIcon className="size-3.5" />
+                    <span>Open /supabase-test</span>
+                    <ArrowUpRight className="size-3.5" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    nativeButton={false}
+                    render={
+                      <a
+                        href="/api/supabase-status"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    }
+                  >
+                    <FolderGit2 className="size-3.5" />
+                    <span>/api/supabase-status</span>
+                    <ArrowUpRight className="size-3.5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Live Repository Inventory Strip */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {starterInventoryStats.map((stat) => (
+                  <Card key={stat.label} className="flex h-full flex-col">
+                    <CardHeader>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-muted-foreground text-xs font-medium">
+                          {stat.label}
                         </span>
+                        <Badge variant="outline" className="shrink-0 font-mono">
+                          {stat.badge}
+                        </Badge>
+                      </div>
+                      <CardTitle className="pt-2 text-base leading-snug">
+                        {stat.value}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      <CardDescription className="text-xs leading-relaxed">
+                        {stat.detail}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Package.json Scripts + Interactive Exploration */}
+              <Card>
+                <CardHeader className="border-b">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                        <Terminal className="text-primary size-4" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base leading-snug">
+                          Key Scripts from package.json
+                        </CardTitle>
+                        <CardDescription className="text-xs">
+                          Standardized commands for development, ESLint 9
+                          flat-config linting, TypeScript checking, unit
+                          testing, and production builds.
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="shrink-0">
+                      {starterScripts.length} NPM Scripts
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2">
+                  {starterScripts.map((script) => (
+                    <Card
+                      key={script.name}
+                      size="sm"
+                      className="bg-muted/30 flex-row items-center justify-between gap-3 px-3.5 py-2.5"
+                    >
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="font-mono text-xs"
+                          >
+                            {script.command}
+                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className="text-muted-foreground font-mono text-[11px]"
+                          >
+                            {script.rawCmd}
+                          </Badge>
+                        </div>
+                        <CardDescription className="truncate text-xs">
+                          {script.description}
+                        </CardDescription>
                       </div>
                       <CopyCommand
                         command={script.command}
                         label={script.name}
                       />
-                    </div>
+                    </Card>
                   ))}
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-                <span className="text-muted-foreground text-xs">
-                  Need to test database credentials, RLS migrations, or live
-                  WebSocket replication?
-                </span>
-                <Button
-                  variant="secondary"
-                  size="xs"
-                  nativeButton={false}
-                  render={<Link href="/supabase-test" />}
-                >
-                  <SupabaseIcon className="size-3" />
-                  <span>Inspect /supabase-test Diagnostics</span>
-                  <ArrowUpRight className="size-3" />
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </div>
+                </CardContent>
+                <CardFooter className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                  <CardDescription className="text-xs">
+                    Need to test database credentials, RLS migrations, or live
+                    WebSocket replication?
+                  </CardDescription>
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    nativeButton={false}
+                    render={<Link href="/supabase-test" />}
+                  >
+                    <SupabaseIcon className="size-3" />
+                    <span>Inspect /supabase-test Diagnostics</span>
+                    <ArrowUpRight className="size-3" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
       </section>
     </div>
   )
