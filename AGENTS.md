@@ -75,12 +75,15 @@ Tailwind's scale is based on `1 unit = 4px` (0.25rem). Avoid arbitrary pixel bra
 
 ## shadcn/ui Rules
 
+> **Always-On UI Rule (`.agent/skills/frontend-design/SKILL.md`)**: Before writing or modifying any `.tsx` UI component or page, you **MUST** read `.agent/skills/frontend-design/SKILL.md` and build exclusively with `shadcn/ui` components from `@/components/ui/*` (`Card`, `Badge`, `Button`, `Separator`, `Alert`, `Table`, `Tabs`, etc.). Never hand-code raw `<button>`, `<input>`, custom badge `<span>` pills, or custom bordered `<div>` cards when a `shadcn/ui` component exists.
+
 1. **Check before building**: Look in `src/components/ui/` before writing a new UI component. The starter ships 50+ components. Reuse and compose them; do not create duplicates.
 2. **Add components with the CLI only**: `npx shadcn@latest add <component>`. Configuration lives in `components.json`.
 3. **Add everything (only when the owner asks)**: `npx shadcn@latest add --all`. This can overwrite files, so run it on a clean git tree and review the diff. Use `--overwrite` only with owner approval.
 4. **Do not edit `src/components/ui/*` casually**: Prefer wrapping or composing. If you must change one, note it in the ticket (the weekly `update-shadcn.yml` workflow may conflict).
 5. **Class merging**: Always use the `cn()` helper from `src/lib/utils.ts`.
 6. **Hooks**: Use `use-mobile.ts` for the `< 768px` breakpoint.
+7. **Card & Grid Layout Guardrails**: In multi-column cards, never place an icon, long title, and badge on a single horizontal row. Put the icon container on the left and `<Badge>` on the right in a top row (`flex items-center justify-between gap-2`), then place `<CardTitle className="pt-3 text-base leading-snug">` on its own full-width line below, with `<Card className="flex h-full flex-col">` and `<CardContent className="flex-1">`.
 
 ## Linting Rules (Next.js 16)
 
@@ -166,6 +169,13 @@ For any ticket that changes UI or behavior, run Playwright against the live app 
 3. **Agent Skills Path**:
    - All agent skills live strictly in `.agent/skills/` (never pass `--all` when installing skills so duplicate `.agents/` or `agent/` folders are not created).
 
+## Starter-Template Landing Page Sync (`src/app/page.tsx`)
+
+1. **Starter-Template Landing Page Sync**:
+   - Whenever new starter-pack features, dependencies, routes, skills, or workflows are added or updated in this template repository, update the starter showcase section in `src/app/page.tsx` so `http://localhost:3000/` accurately reflects what's new in the codebase—using only real features present in the repo.
+2. **Downstream User Protection**:
+   - Only update `src/app/page.tsx` if the starter-pack showcase section (`data-starter-showcase="true"`) is still present. If a developer clones this template and replaces `src/app/page.tsx` with their own custom app/landing page, NEVER overwrite or re-inject starter-pack template sections into their custom `src/app/page.tsx`.
+
 <!-- END:starter-pack-additions -->
 
 ---
@@ -180,6 +190,7 @@ Skills live in `.agent/skills/<name>/SKILL.md` and are the **source of truth** f
 
 | Skill                              | Read it before                                                                                                                                       |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `frontend-design`                  | Writing or modifying ANY `.tsx` UI component, page, layout, card grid, form, or dashboard (Mandatory `shadcn/ui` First Rule)                         |
 | `supabase`                         | ANY Supabase task: database, Auth, RLS, Storage, Realtime, Edge Functions, migrations, CLI, MCP, debugging                                           |
 | `supabase-postgres-best-practices` | Writing or changing anything in Postgres: tables, types, migrations, indexes, RLS policies, functions, triggers, queries, slow-query diagnosis       |
 | `supabase-realtime-data`           | Building live-update features (Realtime subscriptions, live dashboards, presence). **Patterns only** (see 3.5)                                       |
@@ -195,9 +206,10 @@ Skills live in `.agent/skills/<name>/SKILL.md` and are the **source of truth** f
 1. The owner's explicit instruction and the active ticket
 2. This `AGENTS.md` (Next.js rules, Tailwind rules, ticket workflow, shadcn rules, Git rules, quality gates)
 3. Security and data-safety rules. If two skills disagree, the **stricter** rule wins
-4. `supabase` skill for Supabase-specific behavior, `supabase-postgres-best-practices` for SQL design and performance
-5. `engineering-skills` for general engineering practice
-6. `supabase-realtime-data` (reference patterns only)
+4. `frontend-design` skill for UI component selection (`shadcn/ui` first) and card/grid layout structure
+5. `supabase` skill for Supabase-specific behavior, `supabase-postgres-best-practices` for SQL design and performance
+6. `engineering-skills` for general engineering practice
+7. `supabase-realtime-data` (reference patterns only)
 
 If a conflict is not listed below and you cannot settle it with this order, stop and ask the owner instead of guessing.
 

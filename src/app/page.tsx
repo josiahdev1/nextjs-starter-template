@@ -1,16 +1,35 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {
+  Activity,
   ArrowUpRight,
   BookOpen,
   Bot,
   CheckCircle2,
+  Database,
   FileCode2,
+  FolderGit2,
+  Layers,
+  Palette,
   ShieldCheck,
   Sparkles,
   Terminal,
   Type,
+  Workflow,
 } from 'lucide-react'
+import packageJson from '../../package.json'
+import { CopyCommand } from '@/components/copy-command'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 
 function NextjsIcon({ className }: { className?: string }) {
   return (
@@ -214,6 +233,124 @@ const readmeHighlights = [
       'Copy-paste starter prompts for AI coding agents plus solutions for common Next.js 16 and CI issues.',
   },
 ]
+
+const starterStackCards = [
+  {
+    title: `Next.js ${packageJson.dependencies.next} & React ${packageJson.dependencies.react}`,
+    badge: 'App Router + RSC',
+    icon: <Layers className="text-primary size-4" />,
+    description:
+      'App Router with React Compiler 1.0, Turbopack dev server, strict TypeScript 5 (@/* alias to src/*), and Next.js 16 src/proxy.ts session convention.',
+    files: ['src/app/layout.tsx', 'src/proxy.ts', 'tsconfig.json'],
+  },
+  {
+    title: 'Tailwind CSS v4 & shadcn/ui',
+    badge: '56 UI Components',
+    icon: <Palette className="size-4 text-cyan-500" />,
+    description:
+      'CSS-first @import tokens with OKLCH light/dark palettes in globals.css, tw-animate-css, Poppins Google font (--font-sans), and 56 Base UI (base-nova) components.',
+    files: ['src/app/globals.css', 'src/components/ui/*', 'components.json'],
+  },
+  {
+    title: 'AI-Agent Ticket Workflow & Rules',
+    badge: 'Always-On /ticket',
+    icon: <Bot className="size-4 text-indigo-500" />,
+    description:
+      'Automatic ticket-first rules across Antigravity, Claude Code, Cursor, and Copilot with 6 domain skills for Frontend Design, Supabase, Postgres, Realtime, Security, and Engineering.',
+    files: [
+      'AGENTS.md',
+      'CLAUDE.md',
+      '.agent/rules/ticket-workflow.md',
+      '.agent/workflows/ticket.md',
+      '.agent/skills/*',
+    ],
+  },
+  {
+    title: 'Optional Supabase + Realtime Diagnostics',
+    badge: 'RLS + WebSockets',
+    icon: <Database className="size-4 text-emerald-500" />,
+    description:
+      'Pre-wired @supabase/ssr v0.12.7 & @supabase/supabase-js v2.109.0 browser/server/proxy clients, RLS-enabled SQL migration, and live status inspector.',
+    files: [
+      'src/lib/supabase/client.ts',
+      'src/lib/supabase/server.ts',
+      'src/lib/supabase/proxy.ts',
+      'supabase/migrations/0001_init_starter.sql',
+      '/supabase-test',
+    ],
+  },
+  {
+    title: 'Code Quality & CI/CD Pipelines',
+    badge: 'ESLint 9 + GitHub CI',
+    icon: <Workflow className="size-4 text-amber-500" />,
+    description:
+      'ESLint 9 flat config (eslint .), Prettier 3.9 with Tailwind class sorting, automated Node tsx unit tests, and 3 GitHub Actions workflows.',
+    files: [
+      'eslint.config.mjs',
+      '.github/workflows/ci.yml',
+      '.github/workflows/update-shadcn.yml',
+      'tests/supabase.test.ts',
+    ],
+  },
+  {
+    title: 'Vercel Ready & Observability',
+    badge: 'Analytics + Vitals',
+    icon: <Activity className="size-4 text-sky-500" />,
+    description:
+      'Pre-wired @vercel/speed-insights v2.1.0 and @vercel/analytics v2.0.1 in RootLayout with zero-config production activation once deployed.',
+    files: ['src/app/layout.tsx', 'package.json'],
+  },
+]
+
+const starterInventoryStats = [
+  {
+    label: 'Template Package',
+    badge: `v${packageJson.version}`,
+    value: packageJson.name,
+    detail: `${Object.keys(packageJson.dependencies).length} runtime + ${Object.keys(packageJson.devDependencies).length} dev packages`,
+  },
+  {
+    label: 'UI Component Library',
+    badge: 'base-nova',
+    value: '56 Pre-installed',
+    detail: 'shadcn/ui (@base-ui/react ^1.9.0) in src/components/ui/',
+  },
+  {
+    label: 'Bundled Agent Skills',
+    badge: '.agent/skills/',
+    value: '6 Domain Skills',
+    detail:
+      'frontend-design, supabase, supabase-postgres-best-practices, supabase-realtime-data, security-audit, engineering-skills',
+  },
+  {
+    label: 'App Routes & API',
+    badge: 'App Router',
+    value: '3 Active Endpoints',
+    detail:
+      '/ (Landing), /supabase-test (Diagnostics UI), /api/supabase-status (JSON)',
+  },
+]
+
+const scriptDescriptions: Record<string, string> = {
+  dev: 'Start Next.js 16 Turbopack dev server on http://localhost:3000',
+  build: 'Create an optimized production build',
+  start: 'Run the compiled production server',
+  lint: 'Run ESLint 9 flat config across the repository (eslint .)',
+  'lint:fix': 'Auto-fix ESLint issues across all files',
+  typecheck: 'Run strict TypeScript compiler check (tsc --noEmit)',
+  test: 'Execute automated test suite via tsx --test',
+  format: 'Format codebase with Prettier & Tailwind sorting plugin',
+  'format:check': 'Verify formatting in CI & pre-commit quality gates',
+}
+
+const starterScripts = Object.entries(packageJson.scripts).map(
+  ([name, rawCmd]) => ({
+    name,
+    command: `npm run ${name}`,
+    rawCmd,
+    description: scriptDescriptions[name] ?? `Run ${rawCmd}`,
+  })
+)
 
 export default function Home() {
   return (
@@ -478,6 +615,240 @@ export default function Home() {
           </a>
         </div>
       </main>
+
+      {/* Starter-Pack Deep Showcase Area (auto-synced while data-starter-showcase="true" is present) */}
+      <section
+        data-starter-showcase="true"
+        aria-label="Starter Stack and Developer Quick Reference"
+        className="w-full max-w-5xl px-6 pb-16 sm:px-14 sm:pb-24"
+      >
+        <Card className="p-2 sm:p-6">
+          <CardContent className="flex flex-col gap-10 pt-4">
+            {/* Section 1: Starter Stack & Features Grid */}
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary">Starter Architecture</Badge>
+                    <Badge variant="outline">
+                      Next.js {packageJson.dependencies.next} • React{' '}
+                      {packageJson.dependencies.react}
+                    </Badge>
+                  </div>
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                    Starter Stack &amp; Features Grid
+                  </h2>
+                  <p className="text-muted-foreground max-w-2xl text-sm">
+                    Every layer below is pre-installed and verified in this
+                    repository—from App Router conventions and OKLCH design
+                    tokens to AI agent workflows and optional Supabase
+                    diagnostics.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  nativeButton={false}
+                  render={<Link href="/supabase-test" />}
+                >
+                  <SupabaseIcon className="size-3.5" />
+                  <span>Explore /supabase-test</span>
+                  <ArrowUpRight className="size-3.5" />
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {starterStackCards.map((card) => (
+                  <Card key={card.title} className="flex h-full flex-col">
+                    <CardHeader>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                          {card.icon}
+                        </div>
+                        <Badge variant="secondary" className="shrink-0">
+                          {card.badge}
+                        </Badge>
+                      </div>
+                      <CardTitle className="pt-3 text-base leading-snug">
+                        {card.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      <CardDescription className="text-xs leading-relaxed">
+                        {card.description}
+                      </CardDescription>
+                    </CardContent>
+                    <CardFooter className="flex flex-wrap gap-1.5 border-t-0 bg-transparent pt-0">
+                      {card.files.map((filePath) => (
+                        <Badge
+                          key={filePath}
+                          variant="outline"
+                          className="font-mono text-[11px]"
+                        >
+                          {filePath}
+                        </Badge>
+                      ))}
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Section 2: What's Included & Quick Exploration Strip */}
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary">Developer Quick Reference</Badge>
+                    <Badge variant="outline">Server-Read Inventory</Badge>
+                  </div>
+                  <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                    What&apos;s Included &amp; Quick Exploration Strip
+                  </h2>
+                  <p className="text-muted-foreground max-w-2xl text-sm">
+                    Live repository inventory read directly from{' '}
+                    <Badge variant="outline" className="font-mono text-[11px]">
+                      package.json
+                    </Badge>
+                    , pre-configured routes, and one-click CLI scripts.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    nativeButton={false}
+                    render={<Link href="/supabase-test" />}
+                  >
+                    <SupabaseIcon className="size-3.5" />
+                    <span>Open /supabase-test</span>
+                    <ArrowUpRight className="size-3.5" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    nativeButton={false}
+                    render={
+                      <a
+                        href="/api/supabase-status"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    }
+                  >
+                    <FolderGit2 className="size-3.5" />
+                    <span>/api/supabase-status</span>
+                    <ArrowUpRight className="size-3.5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Live Repository Inventory Strip */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {starterInventoryStats.map((stat) => (
+                  <Card key={stat.label} className="flex h-full flex-col">
+                    <CardHeader>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-muted-foreground text-xs font-medium">
+                          {stat.label}
+                        </span>
+                        <Badge variant="outline" className="shrink-0 font-mono">
+                          {stat.badge}
+                        </Badge>
+                      </div>
+                      <CardTitle className="pt-2 text-base leading-snug">
+                        {stat.value}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      <CardDescription className="text-xs leading-relaxed">
+                        {stat.detail}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Package.json Scripts + Interactive Exploration */}
+              <Card>
+                <CardHeader className="border-b">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="bg-muted/50 flex size-9 items-center justify-center rounded-lg border">
+                        <Terminal className="text-primary size-4" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-base leading-snug">
+                          Key Scripts from package.json
+                        </CardTitle>
+                        <CardDescription className="text-xs">
+                          Standardized commands for development, ESLint 9
+                          flat-config linting, TypeScript checking, unit
+                          testing, and production builds.
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="shrink-0">
+                      {starterScripts.length} NPM Scripts
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2">
+                  {starterScripts.map((script) => (
+                    <Card
+                      key={script.name}
+                      size="sm"
+                      className="bg-muted/30 flex-row items-center justify-between gap-3 px-3.5 py-2.5"
+                    >
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="font-mono text-xs"
+                          >
+                            {script.command}
+                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className="text-muted-foreground font-mono text-[11px]"
+                          >
+                            {script.rawCmd}
+                          </Badge>
+                        </div>
+                        <CardDescription className="truncate text-xs">
+                          {script.description}
+                        </CardDescription>
+                      </div>
+                      <CopyCommand
+                        command={script.command}
+                        label={script.name}
+                      />
+                    </Card>
+                  ))}
+                </CardContent>
+                <CardFooter className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                  <CardDescription className="text-xs">
+                    Need to test database credentials, RLS migrations, or live
+                    WebSocket replication?
+                  </CardDescription>
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    nativeButton={false}
+                    render={<Link href="/supabase-test" />}
+                  >
+                    <SupabaseIcon className="size-3" />
+                    <span>Inspect /supabase-test Diagnostics</span>
+                    <ArrowUpRight className="size-3" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   )
 }
