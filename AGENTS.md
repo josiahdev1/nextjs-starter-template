@@ -87,7 +87,7 @@ Tailwind's scale is based on `1 unit = 4px` (0.25rem). Avoid arbitrary pixel bra
 
 ## shadcn/ui Rules
 
-> **Always-On UI Rule**: Build exclusively with `shadcn/ui` components from `@/components/ui/*` (`Card`, `Badge`, `Button`, `Separator`, `Alert`, `Table`, `Tabs`, etc.). Never hand-code raw `<button>`, `<input>`, custom badge `<span>` pills, or custom bordered `<div>` cards when a `shadcn/ui` component exists. *(Only read `.agent/skills/frontend-design/SKILL.md` if explicitly requested.)*
+> **Always-On UI Rule**: Build exclusively with `shadcn/ui` components from `@/components/ui/*` (`Card`, `Badge`, `Button`, `Separator`, `Alert`, `Table`, `Tabs`, etc.). Never hand-code raw `<button>`, `<input>`, custom badge `<span>` pills, or custom bordered `<div>` cards when a `shadcn/ui` component exists. _(Only read `.agent/skills/frontend-design/SKILL.md` if explicitly requested.)_
 
 1. **Check before building**: Reuse and compose the pre-installed components in `src/components/ui/`; do not create duplicates.
 2. **Add components with the CLI only**: `npx shadcn@latest add <component>`. Configuration lives in `components.json`.
