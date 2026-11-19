@@ -111,7 +111,7 @@ Before every commit and before setting any ticket `COMPLETED`, run and record re
 npm run format:check   # Prettier
 npm run lint           # ESLint CLI (eslint .)
 npm run typecheck      # tsc --noEmit
-npx vitest run         # single-run tests (only if a test script exists)
+npm test               # tsx --test tests/*.test.ts (do NOT run vitest)
 npm run build          # Next.js production build
 ```
 
