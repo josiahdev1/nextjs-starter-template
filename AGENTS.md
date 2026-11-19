@@ -8,6 +8,18 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## Fast Execution & Zero-Loop Rule (Highest Priority)
+
+To prevent token waste, stalled tool calls, and repetitive repo scanning on both fresh and large projects:
+
+1. **Ticket-Only Focus**: When given a task or ticket, ONLY read:
+   - `tickets/TEMPLATE.md` (if creating a new ticket) or the exact active ticket file.
+   - The specific target files directly required by that ticket.
+2. **No Blind Repo Scanning**: Do **NOT** read `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `src/lib/utils.ts`, unrelated `src/components/ui/*` primitives, `node_modules/next/dist/docs/`, or past `tickets/ticket-*.md` files unless a specific build/type error requires checking them.
+3. **Skip Automatic Skill Reads**: Do **NOT** read `.agent/skills/*/SKILL.md` on every turn. Only read a skill if the user explicitly asks for it or if you hit an unfamiliar API/error.
+4. **Act Immediately**: Create or open the ticket (`Status: IN PROGRESS`) as your very first action, then start editing code right away. Never spend multiple turns "analyzing" project structure that is already summarized in this file.
+5. **Fast Numbering**: To find the next ticket number, list filenames in `tickets/` only—never open or read previous ticket files.
+
 ## Tailwind CSS Developer Guide for Agents
 
 This project uses **Tailwind CSS v4** alongside the **Tailwind CSS IntelliSense** engine. To prevent `suggestCanonicalClasses` warnings from appearing in the user's IDE, agents must always write **canonical utility classes** instead of arbitrary bracket syntax (`[...]`).
@@ -66,7 +78,7 @@ Tailwind's scale is based on `1 unit = 4px` (0.25rem). Avoid arbitrary pixel bra
 
 > **Always-On Automatic Rule (`.agent/rules/ticket-workflow.md` & `/ticket`)**: Across all AI coding agents (Antigravity, Claude Code via `CLAUDE.md`, Cursor, GitHub Copilot, Codex), ticket creation is **automatic**—the user never needs to paste ticket boilerplate. Skip ticket creation **ONLY** when the user asks a purely read-only question or explicitly says `"no ticket"` / `"read-only"`. Users can also invoke `/ticket <task>` via `.agent/workflows/ticket.md`.
 
-1. **Mandatory Read & Naming Convention**: Before starting any task that modifies code, config, or docs, always read `AGENTS.md` and `tickets/TEMPLATE.md` and inspect existing `tickets/ticket-*.md` files to check active tickets or determine the next sequential number. Every ticket lives in root `tickets/` named `tickets/ticket-XX-<kebab-case-slug>.md` and strictly follows `tickets/TEMPLATE.md` (`# [TICKET-XX] <Title>`, metadata block with `Phase / Milestone`, `Status`: `TODO` | `IN PROGRESS` | `COMPLETED`, `Date`, `Commit SHA`, `Branch: dev`, `Author / Assignee`, and sections `1. Context & Objectives` through `5. Notes & Dependencies`).
+1. **Fast Naming Convention**: List filenames in `tickets/` to determine the next sequential number—do **NOT** open or read past `tickets/ticket-*.md` files. Every ticket lives in root `tickets/` named `tickets/ticket-XX-<kebab-case-slug>.md` and strictly follows `tickets/TEMPLATE.md` (`# [TICKET-XX] <Title>`, metadata block with `Phase / Milestone`, `Status`: `TODO` | `IN PROGRESS` | `COMPLETED`, `Date`, `Commit SHA`, `Branch: dev`, `Author / Assignee`, and sections `1. Context & Objectives` through `5. Notes & Dependencies`).
 2. **Ticket Before Code (Zero Unapproved Coding)**:
    - **Existing / Provided Ticket**: If the owner already created, named, or pasted a ticket, read that exact ticket, NEVER create a duplicate, set `**Status**: IN PROGRESS`, implement all changes, fill in `Commit SHA` and `4. Verification & Quality Gates` with real command outputs, and set `**Status**: COMPLETED` when done.
    - **New Request Without a Ticket**: If the owner asks for a new feature, UI change, setup, or bug fix without an existing ticket, automatically create the next sequential ticket from `tickets/TEMPLATE.md` FIRST (`**Status**: IN PROGRESS`), and only write code after the ticket file is written.
@@ -75,9 +87,9 @@ Tailwind's scale is based on `1 unit = 4px` (0.25rem). Avoid arbitrary pixel bra
 
 ## shadcn/ui Rules
 
-> **Always-On UI Rule (`.agent/skills/frontend-design/SKILL.md`)**: Before writing or modifying any `.tsx` UI component or page, you **MUST** read `.agent/skills/frontend-design/SKILL.md` and build exclusively with `shadcn/ui` components from `@/components/ui/*` (`Card`, `Badge`, `Button`, `Separator`, `Alert`, `Table`, `Tabs`, etc.). Never hand-code raw `<button>`, `<input>`, custom badge `<span>` pills, or custom bordered `<div>` cards when a `shadcn/ui` component exists.
+> **Always-On UI Rule**: Build exclusively with `shadcn/ui` components from `@/components/ui/*` (`Card`, `Badge`, `Button`, `Separator`, `Alert`, `Table`, `Tabs`, etc.). Never hand-code raw `<button>`, `<input>`, custom badge `<span>` pills, or custom bordered `<div>` cards when a `shadcn/ui` component exists. *(Only read `.agent/skills/frontend-design/SKILL.md` if explicitly requested.)*
 
-1. **Check before building**: Look in `src/components/ui/` before writing a new UI component. The starter ships 50+ components. Reuse and compose them; do not create duplicates.
+1. **Check before building**: Reuse and compose the pre-installed components in `src/components/ui/`; do not create duplicates.
 2. **Add components with the CLI only**: `npx shadcn@latest add <component>`. Configuration lives in `components.json`.
 3. **Add everything (only when the owner asks)**: `npx shadcn@latest add --all`. This can overwrite files, so run it on a clean git tree and review the diff. Use `--overwrite` only with owner approval.
 4. **Do not edit `src/components/ui/*` casually**: Prefer wrapping or composing. If you must change one, note it in the ticket (the weekly `update-shadcn.yml` workflow may conflict).
@@ -131,7 +143,7 @@ If a script does not exist in `package.json`, write "N/A (script not configured)
 1. **Setup source of truth**: follow `docs/supabase-setup.md` exactly.
    - Packages: `@supabase/supabase-js` and `@supabase/ssr`
    - Library blocks: `npx shadcn@latest add @supabase/supabase-client-nextjs`
-   - Agent skills (optional): `npx skills add supabase/agent-skills`, then read the installed Supabase skill before schema, RLS, Realtime, or Storage work.
+   - Agent skills (optional): `npx skills add supabase/agent-skills`.
 2. **Environment variables (`.env.local`)**:
    - Required: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
    - `.env.local` is git-ignored. Provide `.env.example` with placeholders only. Never print, log, or commit real keys.
@@ -140,7 +152,7 @@ If a script does not exist in `package.json`, write "N/A (script not configured)
 3. **Client usage**:
    - Browser client: `src/lib/supabase/client.ts` (`createBrowserClient`)
    - Server client: `src/lib/supabase/server.ts` (`createServerClient` with Next.js cookies)
-   - Session refresh: Next.js 16 renamed `middleware` to `proxy`. Confirm in `node_modules/next/dist/docs/` before writing it.
+   - Session refresh: Next.js 16 renamed `middleware` to `proxy`. Confirm in `node_modules/next/dist/docs/` only if writing or modifying proxy/middleware.
    - Use `getUser()` (not `getSession()`) for server-side auth checks.
 4. **Database changes & Autonomous Migration Rule**:
    - Numbered schema in `supabase/migrations/NNNN_<slug>.sql` (additive, `IF NOT EXISTS`). Seeds in `supabase/seed.sql`.
@@ -184,27 +196,28 @@ For any ticket that changes UI or behavior, run Playwright against the live app 
 
 ## Agent Skills Router & Conflict Rules (`.agent/skills/`)
 
+> **On-Demand Only**: Do **NOT** auto-read these skills on every ticket. Consult the matching `SKILL.md` only when explicitly requested by the user or when debugging a complex/unfamiliar issue in that domain.
+
 Skills live in `.agent/skills/<name>/SKILL.md` and are the **source of truth** for their topic. This section only says **which skill to read** and **how to settle conflicts**. It intentionally does not repeat skill content, so never copy skill rules into this file.
 
-### 1. Which skill to read (before starting the work)
+### 1. Which skill to read (when needed on demand)
 
-| Skill                              | Read it before                                                                                                                                       |
+| Skill                              | Read it on demand for                                                                                                                                |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `frontend-design`                  | Writing or modifying ANY `.tsx` UI component, page, layout, card grid, form, or dashboard (Mandatory `shadcn/ui` First Rule)                         |
-| `supabase`                         | ANY Supabase task: database, Auth, RLS, Storage, Realtime, Edge Functions, migrations, CLI, MCP, debugging                                           |
-| `supabase-postgres-best-practices` | Writing or changing anything in Postgres: tables, types, migrations, indexes, RLS policies, functions, triggers, queries, slow-query diagnosis       |
+| `frontend-design`                  | Complex `.tsx` UI components, layouts, card grids, forms, or dashboards (`shadcn/ui` First Rule)                                                     |
+| `supabase`                         | Complex Supabase tasks: Auth, RLS, Storage, Realtime, Edge Functions, migrations, CLI, MCP, debugging                                                |
+| `supabase-postgres-best-practices` | Complex Postgres design: tables, types, migrations, indexes, RLS policies, functions, triggers, queries, slow-query diagnosis                        |
 | `supabase-realtime-data`           | Building live-update features (Realtime subscriptions, live dashboards, presence). **Patterns only** (see 3.5)                                       |
 | `security-audit`                   | Security questions, reviews of auth, RLS, API routes, uploads, secrets, dependencies, or any request to audit or pen-test                            |
 | `engineering-skills`               | Architecture (RSC, Server Actions, Route Handlers), data modeling, caching, background jobs, CI/CD and deployment, performance, testing, code review |
 
-- Read the relevant `SKILL.md` and then only the reference files it points to for the task. Do not bulk-read an entire skill folder.
-- In `5. Notes & Dependencies` of the active ticket, list which skills were read.
-- Supabase changes often. The `supabase` skill requires checking the current changelog and docs before implementing. Do that instead of trusting memory.
+- Read only the relevant `SKILL.md` and the specific reference file it points to. Do not bulk-read an entire skill folder.
+- In `5. Notes & Dependencies` of the active ticket, list any skills read (or `None`).
 
 ### 2. Precedence when instructions disagree (highest first)
 
 1. The owner's explicit instruction and the active ticket
-2. This `AGENTS.md` (Next.js rules, Tailwind rules, ticket workflow, shadcn rules, Git rules, quality gates)
+2. This `AGENTS.md` (Fast Execution rule, Next.js rules, Tailwind rules, ticket workflow, shadcn rules, Git rules, quality gates)
 3. Security and data-safety rules. If two skills disagree, the **stricter** rule wins
 4. `frontend-design` skill for UI component selection (`shadcn/ui` first) and card/grid layout structure
 5. `supabase` skill for Supabase-specific behavior, `supabase-postgres-best-practices` for SQL design and performance
@@ -230,3 +243,24 @@ If a conflict is not listed below and you cannot settle it with this order, stop
 - Never mark a security check as passed without evidence. Record the command or finding reference in the ticket.
 
 <!-- END:agent-skills-router -->
+
+<!-- BEGIN:nextjs-agent-feedback -->
+
+## Report Next.js feedback
+
+The project owner enabled `experimental.agentFeedback`, authorizing this feedback pass. When enabled, `next dev` writes this block and restores it if removed. Commit `AGENTS.md` with your work to keep the tree clean.
+
+During the current user request, retain anonymized facts as feedback candidates for meaningful or recurring Next.js issues:
+
+- Crashes, hangs, OOMs, or unexpected slowness
+- Incorrect behavior, output, errors, or diagnostics
+- Missing, unclear, or conflicting documentation
+- Unexpected CLI, codemod, Skill, or upgrade behavior and non-obvious workarounds
+
+Continue the current user request without reporting immediately. Routine debugging is not feedback. Verify changes before retaining them as feedback candidates. Never retain code, logs, paths, URLs, secrets, personal information, or project-specific data.
+
+Retain qualifying friction even if it is later fixed or worked around; record the final outcome during the reporting pass.
+
+Before the final response, run one reporting pass. If candidates remain, from this file's directory run `npx --no-install next internal agent-feedback-instructions` once without piping or truncating its output. Follow its output or error guidance. If a network sandbox blocks it, retry with network access; if it still returns no output, continue normally.
+
+<!-- END:nextjs-agent-feedback -->
